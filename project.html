@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice-Controlled Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        body.light-mode {
+            background-color: #f8f9fa;
+            color: #212529;
+        }
+        body.dark-mode {
+            background-color: #212529;
+            color: #f8f9fa;
+        }
+        .container {
+            transition: background-color 0.5s, box-shadow 0.5s;
+        }
+        .light-mode .container {
+            background-color: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        .dark-mode .container {
+            background-color: #2d3748;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        .card {
+            border-radius: 1.5rem;
+            transition: background-color 0.5s, opacity 0.5s, transform 0.3s ease-in-out;
+            transform: scale(1);
+        }
+        .card:hover {
+            transform: scale(1.02);
+        }
+        .light-mode .card {
+            background-color: #e9ecef;
+        }
+        .dark-mode .card {
+            background-color: #495057;
+        }
+        .listening-icon {
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .todo-item {
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+        .todo-item.completed {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+        .todo-item:hover {
+            color: #6366f1; /* Tailwind's indigo-500 */
+        }
+        .action-button {
+            transition: transform 0.2s;
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body class="light-mode">
+
+    <div class="flex items-center justify-center min-h-screen p-6 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+        <div class="container rounded-3xl p-10 max-w-5xl w-full">
+            <header class="text-center mb-12">
+                <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500">Vocal Dashboard</h1>
+                <p class="mt-3 text-lg">Control your digital life with your voice.</p>
+            </header>
+
+            <!-- Voice Status Indicator -->
+            <div class="flex items-center justify-center mb-8">
+                <div id="voice-status" class="flex items-center space-x-2 px-6 py-3 rounded-full text-sm font-medium transition-colors duration-500 light-mode:bg-gray-200 dark-mode:bg-gray-600 shadow-md">
+                    <i class="fas fa-microphone text-green-500 listening-icon"></i>
+                    <span>Listening for commands...</span>
+                </div>
+            </div>
+
+            <!-- Dashboard Cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+                <!-- Weather Card -->
+                <div id="weather-card" class="card p-8 opacity-0">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center text-indigo-500">
+                        <i class="fas fa-cloud-sun text-2xl mr-3"></i>
+                        Weather
+                    </h2>
+                    <p class="text-2xl font-semibold mb-2">Currently:</p>
+                    <p id="weather-text" class="text-lg">Loading weather data...</p>
+                </div>
+
+                <!-- Notes Card -->
+                <div id="notes-card" class="card p-8 opacity-0">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center text-purple-500">
+                        <i class="fas fa-sticky-note text-2xl mr-3"></i>
+                        Notes
+                    </h2>
+                    <div id="notes-content" class="space-y-2">
+                        <p class="italic text-gray-400">No notes to display.</p>
+                    </div>
+                </div>
+
+                <!-- To-Do List Card -->
+                <div id="todo-card" class="card p-8 opacity-0">
+                    <h2 class="text-3xl font-bold mb-4 flex items-center text-pink-500">
+                        <i class="fas fa-list-check text-2xl mr-3"></i>
+                        To-Do List
+                    </h2>
+                    <div id="todo-list-content" class="space-y-2">
+                        <p class="italic text-gray-400">No tasks to display.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="user-info" class="text-center mt-12 text-sm text-gray-500 dark:text-gray-400">
+                <p>User ID: <span id="user-id">Loading...</span></p>
+                <p class="mt-2">Try saying: **"Show Weather"**, **"Hide Weather"**, **"Show Notes"**, **"Hide Notes"**, **"Show To-Do"**, **"Hide To-Do"**, **"Change theme"**, **"Add note [your note]"**, **"Clear notes"**, **"Add task [your task]"**, **"Complete task number [1, 2, 3...]"**, **"Delete task number [1, 2, 3...]"**, **"Clear tasks"**.</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // Firebase imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        
+        // --- Globals & DOM Elements ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        let db, auth, userId;
+
+        const body = document.body;
+        const voiceStatus = document.getElementById('voice-status');
+        const weatherCard = document.getElementById('weather-card');
+        const notesCard = document.getElementById('notes-card');
+        const todoCard = document.getElementById('todo-card');
+        const notesContent = document.getElementById('notes-content');
+        const todoListContent = document.getElementById('todo-list-content');
+        const userIdDisplay = document.getElementById('user-id');
+        let currentTodos = [];
+
+        // Set up Web Speech API
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Voice recognition not supported.`;
+            return;
+        }
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = false;
+        recognition.lang = 'en-US';
+
+        // --- Firebase & Firestore Functions ---
+        const initFirebase = async () => {
+            try {
+                const app = initializeApp(firebaseConfig);
+                db = getFirestore(app);
+                auth = getAuth(app);
+
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await signInAnonymously(auth);
+                }
+
+                onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        userIdDisplay.innerText = userId;
+                        console.log("Authenticated with user ID:", userId);
+                        listenForNotes();
+                        listenForTodos();
+                    } else {
+                        userId = null;
+                        userIdDisplay.innerText = "N/A";
+                        console.log("User is signed out.");
+                    }
+                });
+            } catch (error) {
+                console.error("Firebase initialization or authentication error:", error);
+                userIdDisplay.innerText = "Error";
+            }
+        };
+        
+        // Firestore Listener for Notes
+        const listenForNotes = () => {
+            if (!userId) { return; }
+            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
+            const notesCollection = collection(db, notesCollectionPath);
+            onSnapshot(notesCollection, (snapshot) => {
+                const notesList = [];
+                snapshot.forEach((doc) => {
+                    notesList.push({ id: doc.id, ...doc.data() });
+                });
+                renderNotes(notesList);
+            }, (error) => {
+                console.error("Error listening to notes:", error);
+                notesContent.innerHTML = `<p class="text-red-500">Error loading notes.</p>`;
+            });
+        };
+
+        const renderNotes = (notesList) => {
+            notesContent.innerHTML = '';
+            if (notesList.length === 0) {
+                notesContent.innerHTML = `<p class="italic text-gray-400">No notes to display.</p>`;
+                return;
+            }
+            notesList.sort((a, b) => new Date(a.timestamp.seconds * 1000) - new Date(b.timestamp.seconds * 1000));
+            notesList.forEach(note => {
+                const noteElement = document.createElement('div');
+                noteElement.classList.add('p-3', 'rounded-lg', 'light-mode:bg-gray-300', 'dark-mode:bg-gray-700', 'text-sm');
+                noteElement.innerText = note.text;
+                notesContent.appendChild(noteElement);
+            });
+        };
+
+        const addNote = async (text) => {
+            if (!userId) { return; }
+            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
+            try {
+                await addDoc(collection(db, notesCollectionPath), { text, timestamp: new Date() });
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Note added.`;
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to add note.`;
+            }
+        };
+
+        const clearNotes = async () => {
+            if (!userId) { return; }
+            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
+            const notesCollectionRef = collection(db, notesCollectionPath);
+            try {
+                const notesSnapshot = await getDocs(notesCollectionRef);
+                await Promise.all(notesSnapshot.docs.map(noteDoc => deleteDoc(noteDoc.ref)));
+                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> Notes cleared.`;
+            } catch (e) {
+                console.error("Error clearing notes: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to clear notes.`;
+            }
+        };
+        
+        // Firestore Listener for To-Dos
+        const listenForTodos = () => {
+            if (!userId) { return; }
+            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
+            const todoCollection = collection(db, todoCollectionPath);
+            onSnapshot(todoCollection, (snapshot) => {
+                currentTodos = [];
+                snapshot.forEach((doc) => {
+                    currentTodos.push({ id: doc.id, ...doc.data() });
+                });
+                renderTodos();
+            }, (error) => {
+                console.error("Error listening to todos:", error);
+                todoListContent.innerHTML = `<p class="text-red-500">Error loading tasks.</p>`;
+            });
+        };
+
+        const renderTodos = () => {
+            todoListContent.innerHTML = '';
+            if (currentTodos.length === 0) {
+                todoListContent.innerHTML = `<p class="italic text-gray-400">No tasks to display.</p>`;
+                return;
+            }
+            currentTodos.sort((a, b) => new Date(a.timestamp.seconds * 1000) - new Date(b.timestamp.seconds * 1000));
+            currentTodos.forEach((todo, index) => {
+                const todoElement = document.createElement('div');
+                todoElement.classList.add('p-3', 'rounded-lg', 'light-mode:bg-gray-300', 'dark-mode:bg-gray-700', 'text-sm', 'flex', 'items-center', 'justify-between', 'todo-item');
+                if (todo.completed) {
+                    todoElement.classList.add('completed');
+                }
+                todoElement.innerHTML = `
+                    <span class="flex-grow">${index + 1}. ${todo.text}</span>
+                    <i class="fas ${todo.completed ? 'fa-check-circle text-green-500' : 'fa-circle text-gray-400'} ml-2"></i>
+                `;
+                todoListContent.appendChild(todoElement);
+            });
+        };
+        
+        const addTodo = async (text) => {
+            if (!userId) { return; }
+            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
+            try {
+                await addDoc(collection(db, todoCollectionPath), {
+                    text,
+                    completed: false,
+                    timestamp: new Date()
+                });
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Task added.`;
+            } catch (e) {
+                console.error("Error adding task: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to add task.`;
+            }
+        };
+
+        const updateTodoStatus = async (taskNumber, completed) => {
+            const taskIndex = taskNumber - 1;
+            if (taskIndex < 0 || taskIndex >= currentTodos.length) {
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Invalid task number.`;
+                return;
+            }
+            const taskId = currentTodos[taskIndex].id;
+            const todoDocRef = doc(db, `/artifacts/${appId}/users/${userId}/todos`, taskId);
+            try {
+                await updateDoc(todoDocRef, { completed });
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Task #${taskNumber} updated.`;
+            } catch (e) {
+                console.error("Error updating task: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to update task.`;
+            }
+        };
+
+        const deleteTodo = async (taskNumber) => {
+            const taskIndex = taskNumber - 1;
+            if (taskIndex < 0 || taskIndex >= currentTodos.length) {
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Invalid task number.`;
+                return;
+            }
+            const taskId = currentTodos[taskIndex].id;
+            const todoDocRef = doc(db, `/artifacts/${appId}/users/${userId}/todos`, taskId);
+            try {
+                await deleteDoc(todoDocRef);
+                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> Task #${taskNumber} deleted.`;
+            } catch (e) {
+                console.error("Error deleting task: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to delete task.`;
+            }
+        };
+
+        const clearTodos = async () => {
+            if (!userId) { return; }
+            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
+            const todoCollectionRef = collection(db, todoCollectionPath);
+            try {
+                const todoSnapshot = await getDocs(todoCollectionRef);
+                await Promise.all(todoSnapshot.docs.map(todoDoc => deleteDoc(todoDoc.ref)));
+                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> All tasks cleared.`;
+            } catch (e) {
+                console.error("Error clearing tasks: ", e);
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to clear tasks.`;
+            }
+        };
+
+        // --- Command Handling ---
+        const handleCommand = (command) => {
+            const lowerCommand = command.toLowerCase();
+            let recognized = false;
+
+            const addNoteRegex = /add note (.+)/;
+            const addTodoRegex = /add task (.+)/;
+            const completeTodoRegex = /complete task number (\d+)/;
+            const deleteTodoRegex = /delete task number (\d+)/;
+
+            if (lowerCommand.match(addNoteRegex)) {
+                addNote(lowerCommand.match(addNoteRegex)[1].trim());
+                recognized = true;
+            } else if (lowerCommand.match(addTodoRegex)) {
+                addTodo(lowerCommand.match(addTodoRegex)[1].trim());
+                recognized = true;
+            } else if (lowerCommand.match(completeTodoRegex)) {
+                updateTodoStatus(parseInt(lowerCommand.match(completeTodoRegex)[1]), true);
+                recognized = true;
+            } else if (lowerCommand.match(deleteTodoRegex)) {
+                deleteTodo(parseInt(lowerCommand.match(deleteTodoRegex)[1]));
+                recognized = true;
+            } else if (lowerCommand.includes('clear notes')) {
+                clearNotes();
+                recognized = true;
+            } else if (lowerCommand.includes('clear tasks')) {
+                clearTodos();
+                recognized = true;
+            } else if (lowerCommand.includes('show weather')) {
+                weatherCard.classList.remove('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show Weather' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('hide weather')) {
+                weatherCard.classList.add('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide Weather' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('show notes')) {
+                notesCard.classList.remove('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show Notes' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('hide notes')) {
+                notesCard.classList.add('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide Notes' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('show to-do')) {
+                todoCard.classList.remove('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show To-Do' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('hide to-do')) {
+                todoCard.classList.add('opacity-0');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide To-Do' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('change theme')) {
+                body.classList.toggle('dark-mode');
+                body.classList.toggle('light-mode');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Change Theme' accepted.`;
+                recognized = true;
+            } else if (lowerCommand.includes('reset')) {
+                weatherCard.classList.add('opacity-0');
+                notesCard.classList.add('opacity-0');
+                todoCard.classList.add('opacity-0');
+                body.classList.remove('dark-mode');
+                body.classList.add('light-mode');
+                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Reset' accepted.`;
+                recognized = true;
+            }
+
+            if (!recognized) {
+                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Command not recognized.`;
+            }
+        };
+
+        // --- Event Listeners and Initialization ---
+        recognition.onresult = (event) => {
+            const lastResultIndex = event.results.length - 1;
+            const transcript = event.results[lastResultIndex][0].transcript.trim();
+            voiceStatus.innerHTML = `<span>Processing... "${transcript}"</span>`;
+            handleCommand(transcript);
+        };
+
+        recognition.onend = () => {
+            voiceStatus.innerHTML = `<i class="fas fa-microphone text-green-500 listening-icon"></i> <span>Listening for commands...</span>`;
+            recognition.start();
+        };
+
+        recognition.onerror = (event) => {
+            console.error('Speech recognition error:', event.error);
+            voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Error: ${event.error}.`;
+        };
+
+        const fetchWeather = () => {
+             fetch('https://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=London')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Could not fetch weather data.');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    const weatherText = `Location: London, UK\nTemperature: ${data.current.temp_c}°C\nCondition: ${data.current.condition.text}`;
+                    document.getElementById('weather-text').innerText = weatherText;
+                })
+                .catch(error => {
+                    console.error('Weather fetch error:', error);
+                    document.getElementById('weather-text').innerText = 'Weather data unavailable. API key may be invalid or network issues.';
+                });
+        };
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await initFirebase();
+            fetchWeather();
+            try {
+                recognition.start();
+            } catch (e) {
+                console.error('Could not start recognition:', e);
+                voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Voice recognition is not supported or failed to start.`;
+            }
+        });
+    </script>
+</body>
+</html>
