@@ -3,477 +3,1074 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice-Controlled Dashboard</title>
+    <title>Enhanced Voice Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+        
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        
         body {
             font-family: 'Inter', sans-serif;
-            transition: background-color 0.5s, color 0.5s;
+            transition: all 0.5s ease;
+            overflow-x: hidden;
         }
+        
         body.light-mode {
-            background-color: #f8f9fa;
-            color: #212529;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #1a202c;
         }
+        
         body.dark-mode {
-            background-color: #212529;
-            color: #f8f9fa;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
         }
-        .container {
-            transition: background-color 0.5s, box-shadow 0.5s;
+        
+        .glass-morphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
         }
-        .light-mode .container {
-            background-color: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        
+        .dark-mode .glass-morphism {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .dark-mode .container {
-            background-color: #2d3748;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
+        
         .card {
-            border-radius: 1.5rem;
-            transition: background-color 0.5s, opacity 0.5s, transform 0.3s ease-in-out;
-            transform: scale(1);
+            border-radius: 24px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transform: translateY(0px);
+            position: relative;
+            overflow: hidden;
         }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.1) 50%, transparent 60%);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+        
+        .card:hover::before {
+            transform: translateX(100%);
+        }
+        
         .card:hover {
-            transform: scale(1.02);
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
-        .light-mode .card {
-            background-color: #e9ecef;
+        
+        .card.visible {
+            animation: slideInUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .dark-mode .card {
-            background-color: #495057;
+        
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
-        .listening-icon {
-            animation: pulse 1.5s infinite ease-in-out;
+        
+        .listening-pulse {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+        
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+            0%, 100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            50% {
+                transform: scale(1.05);
+                opacity: 0.8;
+            }
         }
+        
+        .voice-wave {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+        }
+        
+        .wave-bar {
+            width: 3px;
+            height: 12px;
+            background: currentColor;
+            border-radius: 2px;
+            animation: wave 1.2s ease-in-out infinite;
+        }
+        
+        .wave-bar:nth-child(1) { animation-delay: -1.2s; }
+        .wave-bar:nth-child(2) { animation-delay: -1.1s; }
+        .wave-bar:nth-child(3) { animation-delay: -1.0s; }
+        .wave-bar:nth-child(4) { animation-delay: -0.9s; }
+        .wave-bar:nth-child(5) { animation-delay: -0.8s; }
+        
+        @keyframes wave {
+            0%, 40%, 100% {
+                transform: scaleY(0.4);
+            }
+            20% {
+                transform: scaleY(1.0);
+            }
+        }
+        
+        .floating-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+                opacity: 0;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .dark-mode .gradient-text {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
         .todo-item {
+            transition: all 0.3s ease;
             cursor: pointer;
-            transition: color 0.3s;
         }
-        .todo-item.completed {
-            text-decoration: line-through;
-            color: #9ca3af;
-        }
+        
         .todo-item:hover {
-            color: #6366f1; /* Tailwind's indigo-500 */
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(4px);
         }
-        .action-button {
-            transition: transform 0.2s;
+        
+        .todo-item.completed {
+            opacity: 0.6;
+            text-decoration: line-through;
         }
-        .action-button:hover {
+        
+        .status-indicator {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .status-indicator::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .command-button {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .command-button:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
             transform: translateY(-2px);
+        }
+        
+        .stats-counter {
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
         }
     </style>
 </head>
-<body class="light-mode">
+<body class="light-mode min-h-screen">
+    <!-- Floating Particles Background -->
+    <div class="floating-particles" id="particles-container"></div>
+    
+    <!-- Notification -->
+    <div id="notification" class="notification glass-morphism rounded-lg p-4 text-white max-w-xs">
+        <div class="flex items-center space-x-2">
+            <i class="fas fa-check-circle text-green-400"></i>
+            <span id="notification-text">Command executed!</span>
+        </div>
+    </div>
 
-    <div class="flex items-center justify-center min-h-screen p-6 bg-gradient-to-br from-indigo-100 via-purple-100 to-pink-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
-        <div class="container rounded-3xl p-10 max-w-5xl w-full">
-            <header class="text-center mb-12">
-                <h1 class="text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-500">Vocal Dashboard</h1>
-                <p class="mt-3 text-lg">Control your digital life with your voice.</p>
+    <div class="relative z-10 flex items-center justify-center min-h-screen p-6">
+        <div class="glass-morphism rounded-3xl p-8 max-w-7xl w-full">
+            <!-- Header -->
+            <header class="text-center mb-8">
+                <h1 class="text-6xl font-black tracking-tight gradient-text mb-2">
+                    <i class="fas fa-microphone-alt mr-4"></i>VocalHub
+                </h1>
+                <p class="text-xl text-white/80">Your AI-powered voice assistant dashboard</p>
+                <div class="mt-4 flex items-center justify-center space-x-4">
+                    <div class="flex items-center space-x-2 text-sm text-white/60">
+                        <i class="fas fa-user-circle"></i>
+                        <span>User: <span id="user-id" class="font-mono">Loading...</span></span>
+                    </div>
+                    <div class="flex items-center space-x-2 text-sm text-white/60">
+                        <i class="fas fa-clock"></i>
+                        <span id="current-time">--:--</span>
+                    </div>
+                </div>
             </header>
 
-            <!-- Voice Status Indicator -->
+            <!-- Voice Status -->
             <div class="flex items-center justify-center mb-8">
-                <div id="voice-status" class="flex items-center space-x-2 px-6 py-3 rounded-full text-sm font-medium transition-colors duration-500 light-mode:bg-gray-200 dark-mode:bg-gray-600 shadow-md">
-                    <i class="fas fa-microphone text-green-500 listening-icon"></i>
-                    <span>Listening for commands...</span>
+                <div id="voice-status" class="status-indicator glass-morphism rounded-full px-8 py-4 flex items-center space-x-4">
+                    <div class="voice-wave text-green-400">
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                        <div class="wave-bar"></div>
+                    </div>
+                    <span class="text-white font-medium">Listening for commands...</span>
+                    <button id="toggle-listening" class="command-button rounded-full p-2 text-white">
+                        <i class="fas fa-pause"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Quick Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <div class="glass-morphism rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold stats-counter text-blue-400" id="notes-count">0</div>
+                    <div class="text-white/60">Active Notes</div>
+                </div>
+                <div class="glass-morphism rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold stats-counter text-purple-400" id="tasks-count">0</div>
+                    <div class="text-white/60">Pending Tasks</div>
+                </div>
+                <div class="glass-morphism rounded-2xl p-6 text-center">
+                    <div class="text-3xl font-bold stats-counter text-green-400" id="commands-count">0</div>
+                    <div class="text-white/60">Commands Today</div>
                 </div>
             </div>
 
             <!-- Dashboard Cards -->
-            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            <div class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 mb-8">
                 <!-- Weather Card -->
-                <div id="weather-card" class="card p-8 opacity-0">
-                    <h2 class="text-3xl font-bold mb-4 flex items-center text-indigo-500">
-                        <i class="fas fa-cloud-sun text-2xl mr-3"></i>
-                        Weather
-                    </h2>
-                    <p class="text-2xl font-semibold mb-2">Currently:</p>
-                    <p id="weather-text" class="text-lg">Loading weather data...</p>
-                </div>
-
-                <!-- Notes Card -->
-                <div id="notes-card" class="card p-8 opacity-0">
-                    <h2 class="text-3xl font-bold mb-4 flex items-center text-purple-500">
-                        <i class="fas fa-sticky-note text-2xl mr-3"></i>
-                        Notes
-                    </h2>
-                    <div id="notes-content" class="space-y-2">
-                        <p class="italic text-gray-400">No notes to display.</p>
+                <div id="weather-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-cloud-sun text-yellow-400 mr-3"></i>
+                            Weather
+                        </h2>
+                        <button class="command-button rounded-full p-2 text-white/60 hover:text-white">
+                            <i class="fas fa-refresh" id="refresh-weather"></i>
+                        </button>
+                    </div>
+                    <div id="weather-content" class="space-y-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/80">Temperature</span>
+                            <span id="temperature" class="text-2xl font-bold text-white">--°</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/80">Condition</span>
+                            <span id="condition" class="text-white">Loading...</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-white/80">Humidity</span>
+                            <span id="humidity" class="text-white">--%</span>
+                        </div>
+                        <div class="text-xs text-white/50 mt-4" id="weather-location">London, UK</div>
                     </div>
                 </div>
 
-                <!-- To-Do List Card -->
-                <div id="todo-card" class="card p-8 opacity-0">
-                    <h2 class="text-3xl font-bold mb-4 flex items-center text-pink-500">
-                        <i class="fas fa-list-check text-2xl mr-3"></i>
-                        To-Do List
-                    </h2>
-                    <div id="todo-list-content" class="space-y-2">
-                        <p class="italic text-gray-400">No tasks to display.</p>
+                <!-- Enhanced Notes Card -->
+                <div id="notes-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-sticky-note text-blue-400 mr-3"></i>
+                            Notes
+                        </h2>
+                        <div class="flex space-x-2">
+                            <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="export-notes">
+                                <i class="fas fa-download"></i>
+                            </button>
+                            <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="clear-notes-btn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="notes-content" class="space-y-3 max-h-64 overflow-y-auto">
+                        <div class="text-white/50 italic text-center py-8">No notes to display</div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white/20">
+                        <input type="text" id="quick-note" placeholder="Quick note..." 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40">
+                    </div>
+                </div>
+
+                <!-- Enhanced Todo Card -->
+                <div id="todo-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-check-square text-green-400 mr-3"></i>
+                            Tasks
+                        </h2>
+                        <div class="flex space-x-2">
+                            <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="sort-tasks">
+                                <i class="fas fa-sort"></i>
+                            </button>
+                            <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="clear-tasks-btn">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="todo-list-content" class="space-y-2 max-h-64 overflow-y-auto">
+                        <div class="text-white/50 italic text-center py-8">No tasks to display</div>
+                    </div>
+                    <div class="mt-4 pt-4 border-t border-white/20">
+                        <input type="text" id="quick-task" placeholder="Quick task..." 
+                               class="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-white/50 focus:outline-none focus:border-white/40">
+                    </div>
+                </div>
+
+                <!-- Timer Card -->
+                <div id="timer-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-stopwatch text-orange-400 mr-3"></i>
+                            Timer
+                        </h2>
+                        <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="timer-settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <div id="timer-display" class="text-5xl font-mono font-bold text-white mb-6">00:00</div>
+                        <div class="flex justify-center space-x-3">
+                            <button id="timer-start" class="command-button px-6 py-2 rounded-lg text-white">
+                                <i class="fas fa-play mr-2"></i>Start
+                            </button>
+                            <button id="timer-pause" class="command-button px-6 py-2 rounded-lg text-white">
+                                <i class="fas fa-pause mr-2"></i>Pause
+                            </button>
+                            <button id="timer-reset" class="command-button px-6 py-2 rounded-lg text-white">
+                                <i class="fas fa-stop mr-2"></i>Reset
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Calendar Card -->
+                <div id="calendar-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-calendar text-purple-400 mr-3"></i>
+                            Calendar
+                        </h2>
+                        <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="calendar-settings">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <div id="current-date" class="text-2xl font-bold text-white mb-4"></div>
+                        <div id="events-list" class="space-y-2 max-h-32 overflow-y-auto">
+                            <div class="text-white/50 italic">No events scheduled</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Music Player Card -->
+                <div id="music-card" class="card glass-morphism p-8 opacity-0">
+                    <div class="flex items-center justify-between mb-6">
+                        <h2 class="text-3xl font-bold text-white flex items-center">
+                            <i class="fas fa-music text-pink-400 mr-3"></i>
+                            Music
+                        </h2>
+                        <button class="command-button rounded-full p-2 text-white/60 hover:text-white" id="music-settings">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                    <div class="text-center">
+                        <div id="now-playing" class="text-lg text-white mb-4">No music playing</div>
+                        <div class="flex justify-center space-x-4">
+                            <button id="music-prev" class="command-button rounded-full p-3 text-white">
+                                <i class="fas fa-backward"></i>
+                            </button>
+                            <button id="music-play" class="command-button rounded-full p-3 text-white text-xl">
+                                <i class="fas fa-play"></i>
+                            </button>
+                            <button id="music-next" class="command-button rounded-full p-3 text-white">
+                                <i class="fas fa-forward"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
-            
-            <div id="user-info" class="text-center mt-12 text-sm text-gray-500 dark:text-gray-400">
-                <p>User ID: <span id="user-id">Loading...</span></p>
-                <p class="mt-2">Try saying: **"Show Weather"**, **"Hide Weather"**, **"Show Notes"**, **"Hide Notes"**, **"Show To-Do"**, **"Hide To-Do"**, **"Change theme"**, **"Add note [your note]"**, **"Clear notes"**, **"Add task [your task]"**, **"Complete task number [1, 2, 3...]"**, **"Delete task number [1, 2, 3...]"**, **"Clear tasks"**.</p>
+
+            <!-- Quick Commands -->
+            <div class="glass-morphism rounded-2xl p-6">
+                <h3 class="text-xl font-semibold text-white mb-4 flex items-center">
+                    <i class="fas fa-magic mr-2"></i>
+                    Quick Commands
+                </h3>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm text-white/70">
+                    <div>"Show [card name]"</div>
+                    <div>"Hide [card name]"</div>
+                    <div>"Add note [text]"</div>
+                    <div>"Add task [text]"</div>
+                    <div>"Complete task [number]"</div>
+                    <div>"Delete task [number]"</div>
+                    <div>"Set timer [minutes]"</div>
+                    <div>"Start timer"</div>
+                    <div>"Change theme"</div>
+                    <div>"Clear notes"</div>
+                    <div>"Clear tasks"</div>
+                    <div>"What's the weather?"</div>
+                </div>
             </div>
         </div>
     </div>
 
     <script type="module">
-        // Firebase imports
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, addDoc, setDoc, updateDoc, deleteDoc, onSnapshot, collection, query, where, getDocs, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        // Enhanced JavaScript functionality
+        let recognition;
+        let isListening = true;
+        let commandsToday = parseInt(localStorage.getItem('commandsToday') || '0');
+        let timerInterval;
+        let timerSeconds = 0;
+        let timerRunning = false;
         
-        // --- Globals & DOM Elements ---
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = JSON.parse(typeof __firebase_config !== 'undefined' ? __firebase_config : '{}');
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        let db, auth, userId;
-
+        // DOM Elements
         const body = document.body;
         const voiceStatus = document.getElementById('voice-status');
+        const toggleListening = document.getElementById('toggle-listening');
         const weatherCard = document.getElementById('weather-card');
         const notesCard = document.getElementById('notes-card');
         const todoCard = document.getElementById('todo-card');
+        const timerCard = document.getElementById('timer-card');
+        const calendarCard = document.getElementById('calendar-card');
+        const musicCard = document.getElementById('music-card');
         const notesContent = document.getElementById('notes-content');
         const todoListContent = document.getElementById('todo-list-content');
-        const userIdDisplay = document.getElementById('user-id');
-        let currentTodos = [];
-
-        // Set up Web Speech API
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognition) {
-            voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Voice recognition not supported.`;
-            return;
+        const quickNote = document.getElementById('quick-note');
+        const quickTask = document.getElementById('quick-task');
+        const timerDisplay = document.getElementById('timer-display');
+        const currentTimeEl = document.getElementById('current-time');
+        const currentDateEl = document.getElementById('current-date');
+        const notification = document.getElementById('notification');
+        const notificationText = document.getElementById('notification-text');
+        
+        let notes = JSON.parse(localStorage.getItem('notes') || '[]');
+        let todos = JSON.parse(localStorage.getItem('todos') || '[]');
+        
+        // Initialize particles
+        function createParticles() {
+            const container = document.getElementById('particles-container');
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                container.appendChild(particle);
+            }
         }
-        const recognition = new SpeechRecognition();
-        recognition.continuous = true;
-        recognition.interimResults = false;
-        recognition.lang = 'en-US';
-
-        // --- Firebase & Firestore Functions ---
-        const initFirebase = async () => {
-            try {
-                const app = initializeApp(firebaseConfig);
-                db = getFirestore(app);
-                auth = getAuth(app);
-
-                if (initialAuthToken) {
-                    await signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await signInAnonymously(auth);
+        
+        // Update time
+        function updateTime() {
+            const now = new Date();
+            currentTimeEl.textContent = now.toLocaleTimeString();
+            currentDateEl.textContent = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+        }
+        
+        // Update stats
+        function updateStats() {
+            document.getElementById('notes-count').textContent = notes.length;
+            document.getElementById('tasks-count').textContent = todos.filter(t => !t.completed).length;
+            document.getElementById('commands-count').textContent = commandsToday;
+        }
+        
+        // Show notification
+        function showNotification(text, type = 'success') {
+            notificationText.textContent = text;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Timer functions
+        function formatTime(seconds) {
+            const mins = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function startTimer() {
+            if (!timerRunning) {
+                timerRunning = true;
+                timerInterval = setInterval(() => {
+                    timerSeconds++;
+                    timerDisplay.textContent = formatTime(timerSeconds);
+                }, 1000);
+                document.getElementById('timer-start').innerHTML = '<i class="fas fa-play mr-2"></i>Running';
+            }
+        }
+        
+        function pauseTimer() {
+            timerRunning = false;
+            clearInterval(timerInterval);
+            document.getElementById('timer-start').innerHTML = '<i class="fas fa-play mr-2"></i>Start';
+        }
+        
+        function resetTimer() {
+            pauseTimer();
+            timerSeconds = 0;
+            timerDisplay.textContent = '00:00';
+        }
+        
+        function setTimer(minutes) {
+            resetTimer();
+            timerSeconds = minutes * 60;
+            timerDisplay.textContent = formatTime(timerSeconds);
+            
+            const countdown = setInterval(() => {
+                timerSeconds--;
+                timerDisplay.textContent = formatTime(timerSeconds);
+                
+                if (timerSeconds <= 0) {
+                    clearInterval(countdown);
+                    showNotification('Timer finished!', 'success');
+                    // Play notification sound
+                    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBCuDz/LSgTYIE2y3/+XQtxgGLIvV9s+SaSlUQgYQYK/p36lVE');
+                    audio.play().catch(e => console.log('Audio play failed:', e));
                 }
-
-                onAuthStateChanged(auth, (user) => {
-                    if (user) {
-                        userId = user.uid;
-                        userIdDisplay.innerText = userId;
-                        console.log("Authenticated with user ID:", userId);
-                        listenForNotes();
-                        listenForTodos();
-                    } else {
-                        userId = null;
-                        userIdDisplay.innerText = "N/A";
-                        console.log("User is signed out.");
-                    }
-                });
+            }, 1000);
+        }
+        
+        // Render functions
+        function renderNotes() {
+            if (notes.length === 0) {
+                notesContent.innerHTML = '<div class="text-white/50 italic text-center py-8">No notes to display</div>';
+                return;
+            }
+            
+            notesContent.innerHTML = notes.map((note, index) => `
+                <div class="bg-white/10 rounded-lg p-3 text-white text-sm relative group">
+                    <div class="pr-8">${note.text}</div>
+                    <div class="text-xs text-white/50 mt-1">${new Date(note.timestamp).toLocaleString()}</div>
+                    <button onclick="deleteNote(${index})" class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity text-red-400 hover:text-red-300">
+                        <i class="fas fa-times text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        function renderTodos() {
+            if (todos.length === 0) {
+                todoListContent.innerHTML = '<div class="text-white/50 italic text-center py-8">No tasks to display</div>';
+                return;
+            }
+            
+            todoListContent.innerHTML = todos.map((todo, index) => `
+                <div class="todo-item bg-white/10 rounded-lg p-3 flex items-center justify-between ${todo.completed ? 'completed' : ''}">
+                    <div class="flex items-center space-x-3">
+                        <button onclick="toggleTodo(${index})" class="text-green-400 hover:text-green-300">
+                            <i class="fas ${todo.completed ? 'fa-check-circle' : 'fa-circle'}"></i>
+                        </button>
+                        <span class="text-white text-sm">${index + 1}. ${todo.text}</span>
+                    </div>
+                    <button onclick="deleteTodo(${index})" class="text-red-400 hover:text-red-300 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <i class="fas fa-trash text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
+        }
+        
+        // Data management functions
+        function addNote(text) {
+            notes.push({ text, timestamp: Date.now() });
+            localStorage.setItem('notes', JSON.stringify(notes));
+            renderNotes();
+            updateStats();
+            showNotification('Note added successfully!');
+        }
+        
+        function deleteNote(index) {
+            notes.splice(index, 1);
+            localStorage.setItem('notes', JSON.stringify(notes));
+            renderNotes();
+            updateStats();
+            showNotification('Note deleted!');
+        }
+        
+        function clearNotes() {
+            notes = [];
+            localStorage.setItem('notes', JSON.stringify(notes));
+            renderNotes();
+            updateStats();
+            showNotification('All notes cleared!');
+        }
+        
+        function addTodo(text) {
+            todos.push({ text, completed: false, timestamp: Date.now() });
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            updateStats();
+            showNotification('Task added successfully!');
+        }
+        
+        function toggleTodo(index) {
+            todos[index].completed = !todos[index].completed;
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            updateStats();
+            showNotification(todos[index].completed ? 'Task completed!' : 'Task reopened!');
+        }
+        
+        function deleteTodo(index) {
+            todos.splice(index, 1);
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            updateStats();
+            showNotification('Task deleted!');
+        }
+        
+        function clearTodos() {
+            todos = [];
+            localStorage.setItem('todos', JSON.stringify(todos));
+            renderTodos();
+            updateStats();
+            showNotification('All tasks cleared!');
+        }
+        
+        // Export functions
+        function exportNotes() {
+            const notesText = notes.map(note => `${new Date(note.timestamp).toLocaleString()}: ${note.text}`).join('\n');
+            const blob = new Blob([notesText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `notes-${new Date().toISOString().split('T')[0]}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showNotification('Notes exported!');
+        }
+        
+        // Weather function
+        async function fetchWeather() {
+            try {
+                // Mock weather data since we don't have a real API key
+                const mockWeather = {
+                    temperature: Math.floor(Math.random() * 30) + 5,
+                    condition: ['Sunny', 'Cloudy', 'Rainy', 'Partly Cloudy'][Math.floor(Math.random() * 4)],
+                    humidity: Math.floor(Math.random() * 40) + 30
+                };
+                
+                document.getElementById('temperature').textContent = `${mockWeather.temperature}°C`;
+                document.getElementById('condition').textContent = mockWeather.condition;
+                document.getElementById('humidity').textContent = `${mockWeather.humidity}%`;
+                
+                showNotification('Weather updated!');
             } catch (error) {
-                console.error("Firebase initialization or authentication error:", error);
-                userIdDisplay.innerText = "Error";
+                console.error('Weather fetch error:', error);
+                document.getElementById('condition').textContent = 'Unable to fetch weather';
             }
-        };
+        }
         
-        // Firestore Listener for Notes
-        const listenForNotes = () => {
-            if (!userId) { return; }
-            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
-            const notesCollection = collection(db, notesCollectionPath);
-            onSnapshot(notesCollection, (snapshot) => {
-                const notesList = [];
-                snapshot.forEach((doc) => {
-                    notesList.push({ id: doc.id, ...doc.data() });
-                });
-                renderNotes(notesList);
-            }, (error) => {
-                console.error("Error listening to notes:", error);
-                notesContent.innerHTML = `<p class="text-red-500">Error loading notes.</p>`;
-            });
-        };
-
-        const renderNotes = (notesList) => {
-            notesContent.innerHTML = '';
-            if (notesList.length === 0) {
-                notesContent.innerHTML = `<p class="italic text-gray-400">No notes to display.</p>`;
-                return;
-            }
-            notesList.sort((a, b) => new Date(a.timestamp.seconds * 1000) - new Date(b.timestamp.seconds * 1000));
-            notesList.forEach(note => {
-                const noteElement = document.createElement('div');
-                noteElement.classList.add('p-3', 'rounded-lg', 'light-mode:bg-gray-300', 'dark-mode:bg-gray-700', 'text-sm');
-                noteElement.innerText = note.text;
-                notesContent.appendChild(noteElement);
-            });
-        };
-
-        const addNote = async (text) => {
-            if (!userId) { return; }
-            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
-            try {
-                await addDoc(collection(db, notesCollectionPath), { text, timestamp: new Date() });
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Note added.`;
-            } catch (e) {
-                console.error("Error adding document: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to add note.`;
-            }
-        };
-
-        const clearNotes = async () => {
-            if (!userId) { return; }
-            const notesCollectionPath = `/artifacts/${appId}/users/${userId}/notes`;
-            const notesCollectionRef = collection(db, notesCollectionPath);
-            try {
-                const notesSnapshot = await getDocs(notesCollectionRef);
-                await Promise.all(notesSnapshot.docs.map(noteDoc => deleteDoc(noteDoc.ref)));
-                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> Notes cleared.`;
-            } catch (e) {
-                console.error("Error clearing notes: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to clear notes.`;
-            }
-        };
-        
-        // Firestore Listener for To-Dos
-        const listenForTodos = () => {
-            if (!userId) { return; }
-            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
-            const todoCollection = collection(db, todoCollectionPath);
-            onSnapshot(todoCollection, (snapshot) => {
-                currentTodos = [];
-                snapshot.forEach((doc) => {
-                    currentTodos.push({ id: doc.id, ...doc.data() });
-                });
-                renderTodos();
-            }, (error) => {
-                console.error("Error listening to todos:", error);
-                todoListContent.innerHTML = `<p class="text-red-500">Error loading tasks.</p>`;
-            });
-        };
-
-        const renderTodos = () => {
-            todoListContent.innerHTML = '';
-            if (currentTodos.length === 0) {
-                todoListContent.innerHTML = `<p class="italic text-gray-400">No tasks to display.</p>`;
-                return;
-            }
-            currentTodos.sort((a, b) => new Date(a.timestamp.seconds * 1000) - new Date(b.timestamp.seconds * 1000));
-            currentTodos.forEach((todo, index) => {
-                const todoElement = document.createElement('div');
-                todoElement.classList.add('p-3', 'rounded-lg', 'light-mode:bg-gray-300', 'dark-mode:bg-gray-700', 'text-sm', 'flex', 'items-center', 'justify-between', 'todo-item');
-                if (todo.completed) {
-                    todoElement.classList.add('completed');
+        // Enhanced command handling
+        function handleCommand(command) {
+            const lowerCommand = command.toLowerCase().trim();
+            commandsToday++;
+            localStorage.setItem('commandsToday', commandsToday.toString());
+            updateStats();
+            
+            // Voice feedback
+            function speak(text) {
+                if ('speechSynthesis' in window) {
+                    const utterance = new SpeechSynthesisUtterance(text);
+                    utterance.rate = 0.8;
+                    utterance.pitch = 1;
+                    speechSynthesis.speak(utterance);
                 }
-                todoElement.innerHTML = `
-                    <span class="flex-grow">${index + 1}. ${todo.text}</span>
-                    <i class="fas ${todo.completed ? 'fa-check-circle text-green-500' : 'fa-circle text-gray-400'} ml-2"></i>
-                `;
-                todoListContent.appendChild(todoElement);
-            });
-        };
-        
-        const addTodo = async (text) => {
-            if (!userId) { return; }
-            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
-            try {
-                await addDoc(collection(db, todoCollectionPath), {
-                    text,
-                    completed: false,
-                    timestamp: new Date()
-                });
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Task added.`;
-            } catch (e) {
-                console.error("Error adding task: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to add task.`;
             }
-        };
-
-        const updateTodoStatus = async (taskNumber, completed) => {
-            const taskIndex = taskNumber - 1;
-            if (taskIndex < 0 || taskIndex >= currentTodos.length) {
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Invalid task number.`;
-                return;
-            }
-            const taskId = currentTodos[taskIndex].id;
-            const todoDocRef = doc(db, `/artifacts/${appId}/users/${userId}/todos`, taskId);
-            try {
-                await updateDoc(todoDocRef, { completed });
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Task #${taskNumber} updated.`;
-            } catch (e) {
-                console.error("Error updating task: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to update task.`;
-            }
-        };
-
-        const deleteTodo = async (taskNumber) => {
-            const taskIndex = taskNumber - 1;
-            if (taskIndex < 0 || taskIndex >= currentTodos.length) {
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Invalid task number.`;
-                return;
-            }
-            const taskId = currentTodos[taskIndex].id;
-            const todoDocRef = doc(db, `/artifacts/${appId}/users/${userId}/todos`, taskId);
-            try {
-                await deleteDoc(todoDocRef);
-                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> Task #${taskNumber} deleted.`;
-            } catch (e) {
-                console.error("Error deleting task: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to delete task.`;
-            }
-        };
-
-        const clearTodos = async () => {
-            if (!userId) { return; }
-            const todoCollectionPath = `/artifacts/${appId}/users/${userId}/todos`;
-            const todoCollectionRef = collection(db, todoCollectionPath);
-            try {
-                const todoSnapshot = await getDocs(todoCollectionRef);
-                await Promise.all(todoSnapshot.docs.map(todoDoc => deleteDoc(todoDoc.ref)));
-                voiceStatus.innerHTML = `<i class="fas fa-trash-alt text-green-500 mr-2"></i> All tasks cleared.`;
-            } catch (e) {
-                console.error("Error clearing tasks: ", e);
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Failed to clear tasks.`;
-            }
-        };
-
-        // --- Command Handling ---
-        const handleCommand = (command) => {
-            const lowerCommand = command.toLowerCase();
+            
             let recognized = false;
-
-            const addNoteRegex = /add note (.+)/;
-            const addTodoRegex = /add task (.+)/;
-            const completeTodoRegex = /complete task number (\d+)/;
-            const deleteTodoRegex = /delete task number (\d+)/;
-
-            if (lowerCommand.match(addNoteRegex)) {
-                addNote(lowerCommand.match(addNoteRegex)[1].trim());
+            let response = '';
+            
+            // Note commands
+            const addNoteMatch = lowerCommand.match(/add note (.+)/);
+            if (addNoteMatch) {
+                addNote(addNoteMatch[1].trim());
+                response = 'Note added successfully';
                 recognized = true;
-            } else if (lowerCommand.match(addTodoRegex)) {
-                addTodo(lowerCommand.match(addTodoRegex)[1].trim());
+            }
+            
+            // Task commands
+            const addTaskMatch = lowerCommand.match(/add task (.+)/);
+            if (addTaskMatch) {
+                addTodo(addTaskMatch[1].trim());
+                response = 'Task added successfully';
                 recognized = true;
-            } else if (lowerCommand.match(completeTodoRegex)) {
-                updateTodoStatus(parseInt(lowerCommand.match(completeTodoRegex)[1]), true);
+            }
+            
+            const completeTaskMatch = lowerCommand.match(/complete task (?:number )?(\d+)/);
+            if (completeTaskMatch) {
+                const taskIndex = parseInt(completeTaskMatch[1]) - 1;
+                if (taskIndex >= 0 && taskIndex < todos.length) {
+                    toggleTodo(taskIndex);
+                    response = `Task ${completeTaskMatch[1]} completed`;
+                } else {
+                    response = 'Invalid task number';
+                }
                 recognized = true;
-            } else if (lowerCommand.match(deleteTodoRegex)) {
-                deleteTodo(parseInt(lowerCommand.match(deleteTodoRegex)[1]));
+            }
+            
+            const deleteTaskMatch = lowerCommand.match(/delete task (?:number )?(\d+)/);
+            if (deleteTaskMatch) {
+                const taskIndex = parseInt(deleteTaskMatch[1]) - 1;
+                if (taskIndex >= 0 && taskIndex < todos.length) {
+                    deleteTodo(taskIndex);
+                    response = `Task ${deleteTaskMatch[1]} deleted`;
+                } else {
+                    response = 'Invalid task number';
+                }
                 recognized = true;
-            } else if (lowerCommand.includes('clear notes')) {
+            }
+            
+            // Timer commands
+            const setTimerMatch = lowerCommand.match(/set timer (?:for )?(\d+) (?:minutes?|mins?)/);
+            if (setTimerMatch) {
+                setTimer(parseInt(setTimerMatch[1]));
+                response = `Timer set for ${setTimerMatch[1]} minutes`;
+                recognized = true;
+            }
+            
+            // Show/Hide commands
+            const cards = {
+                'weather': weatherCard,
+                'notes': notesCard,
+                'tasks': todoCard,
+                'todo': todoCard,
+                'timer': timerCard,
+                'calendar': calendarCard,
+                'music': musicCard
+            };
+            
+            Object.keys(cards).forEach(cardName => {
+                if (lowerCommand.includes(`show ${cardName}`)) {
+                    cards[cardName].classList.remove('opacity-0');
+                    cards[cardName].classList.add('visible');
+                    response = `${cardName.charAt(0).toUpperCase() + cardName.slice(1)} card shown`;
+                    recognized = true;
+                } else if (lowerCommand.includes(`hide ${cardName}`)) {
+                    cards[cardName].classList.add('opacity-0');
+                    cards[cardName].classList.remove('visible');
+                    response = `${cardName.charAt(0).toUpperCase() + cardName.slice(1)} card hidden`;
+                    recognized = true;
+                }
+            });
+            
+            // Other commands
+            if (lowerCommand.includes('clear notes')) {
                 clearNotes();
+                response = 'All notes cleared';
                 recognized = true;
             } else if (lowerCommand.includes('clear tasks')) {
                 clearTodos();
+                response = 'All tasks cleared';
                 recognized = true;
-            } else if (lowerCommand.includes('show weather')) {
-                weatherCard.classList.remove('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show Weather' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('hide weather')) {
-                weatherCard.classList.add('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide Weather' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('show notes')) {
-                notesCard.classList.remove('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show Notes' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('hide notes')) {
-                notesCard.classList.add('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide Notes' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('show to-do')) {
-                todoCard.classList.remove('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Show To-Do' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('hide to-do')) {
-                todoCard.classList.add('opacity-0');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Hide To-Do' accepted.`;
-                recognized = true;
-            } else if (lowerCommand.includes('change theme')) {
+            } else if (lowerCommand.includes('change theme') || lowerCommand.includes('switch theme')) {
                 body.classList.toggle('dark-mode');
                 body.classList.toggle('light-mode');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Change Theme' accepted.`;
+                response = 'Theme changed';
                 recognized = true;
-            } else if (lowerCommand.includes('reset')) {
-                weatherCard.classList.add('opacity-0');
-                notesCard.classList.add('opacity-0');
-                todoCard.classList.add('opacity-0');
-                body.classList.remove('dark-mode');
-                body.classList.add('light-mode');
-                voiceStatus.innerHTML = `<i class="fas fa-check text-green-500 mr-2"></i> Command: 'Reset' accepted.`;
+            } else if (lowerCommand.includes('start timer')) {
+                startTimer();
+                response = 'Timer started';
                 recognized = true;
-            }
-
-            if (!recognized) {
-                voiceStatus.innerHTML = `<i class="fas fa-times text-red-500 mr-2"></i> Command not recognized.`;
-            }
-        };
-
-        // --- Event Listeners and Initialization ---
-        recognition.onresult = (event) => {
-            const lastResultIndex = event.results.length - 1;
-            const transcript = event.results[lastResultIndex][0].transcript.trim();
-            voiceStatus.innerHTML = `<span>Processing... "${transcript}"</span>`;
-            handleCommand(transcript);
-        };
-
-        recognition.onend = () => {
-            voiceStatus.innerHTML = `<i class="fas fa-microphone text-green-500 listening-icon"></i> <span>Listening for commands...</span>`;
-            recognition.start();
-        };
-
-        recognition.onerror = (event) => {
-            console.error('Speech recognition error:', event.error);
-            voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Error: ${event.error}.`;
-        };
-
-        const fetchWeather = () => {
-             fetch('https://api.weatherapi.com/v1/current.json?key=YOUR_API_KEY&q=London')
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Could not fetch weather data.');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    const weatherText = `Location: London, UK\nTemperature: ${data.current.temp_c}°C\nCondition: ${data.current.condition.text}`;
-                    document.getElementById('weather-text').innerText = weatherText;
-                })
-                .catch(error => {
-                    console.error('Weather fetch error:', error);
-                    document.getElementById('weather-text').innerText = 'Weather data unavailable. API key may be invalid or network issues.';
+            } else if (lowerCommand.includes('stop timer') || lowerCommand.includes('pause timer')) {
+                pauseTimer();
+                response = 'Timer paused';
+                recognized = true;
+            } else if (lowerCommand.includes('reset timer')) {
+                resetTimer();
+                response = 'Timer reset';
+                recognized = true;
+            } else if (lowerCommand.includes('what\'s the weather') || lowerCommand.includes('weather update')) {
+                fetchWeather();
+                response = 'Weather updated';
+                recognized = true;
+            } else if (lowerCommand.includes('show all') || lowerCommand.includes('show everything')) {
+                Object.values(cards).forEach(card => {
+                    card.classList.remove('opacity-0');
+                    card.classList.add('visible');
                 });
-        };
-
-        document.addEventListener('DOMContentLoaded', async () => {
-            await initFirebase();
-            fetchWeather();
+                response = 'All cards shown';
+                recognized = true;
+            } else if (lowerCommand.includes('hide all') || lowerCommand.includes('hide everything')) {
+                Object.values(cards).forEach(card => {
+                    card.classList.add('opacity-0');
+                    card.classList.remove('visible');
+                });
+                response = 'All cards hidden';
+                recognized = true;
+            } else if (lowerCommand.includes('what time is it') || lowerCommand.includes('current time')) {
+                const now = new Date();
+                response = `It's ${now.toLocaleTimeString()}`;
+                recognized = true;
+            } else if (lowerCommand.includes('what date is it') || lowerCommand.includes('today\'s date')) {
+                const now = new Date();
+                response = `Today is ${now.toLocaleDateString()}`;
+                recognized = true;
+            }
+            
+            // Update voice status
+            if (recognized) {
+                voiceStatus.innerHTML = `
+                    <i class="fas fa-check text-green-400"></i>
+                    <span class="text-white font-medium">${response}</span>
+                `;
+                speak(response);
+                showNotification(response);
+            } else {
+                voiceStatus.innerHTML = `
+                    <i class="fas fa-question text-yellow-400"></i>
+                    <span class="text-white font-medium">Command not recognized: "${command}"</span>
+                `;
+                speak("Sorry, I didn't understand that command");
+                showNotification('Command not recognized', 'warning');
+            }
+            
+            // Reset status after delay
+            setTimeout(() => {
+                if (isListening) {
+                    voiceStatus.innerHTML = `
+                        <div class="voice-wave text-green-400">
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                            <div class="wave-bar"></div>
+                        </div>
+                        <span class="text-white font-medium">Listening for commands...</span>
+                        <button id="toggle-listening" class="command-button rounded-full p-2 text-white">
+                            <i class="fas fa-pause"></i>
+                        </button>
+                    `;
+                    setupToggleButton();
+                }
+            }, 3000);
+        }
+        
+        // Setup speech recognition
+        function setupSpeechRecognition() {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500"></i><span>Voice recognition not supported</span>`;
+                return;
+            }
+            
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = false;
+            recognition.lang = 'en-US';
+            
+            recognition.onresult = (event) => {
+                const lastResultIndex = event.results.length - 1;
+                const transcript = event.results[lastResultIndex][0].transcript.trim();
+                handleCommand(transcript);
+            };
+            
+            recognition.onend = () => {
+                if (isListening) {
+                    try {
+                        recognition.start();
+                    } catch (e) {
+                        console.error('Recognition restart failed:', e);
+                    }
+                }
+            };
+            
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error);
+                voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500"></i><span>Error: ${event.error}</span>`;
+            };
+            
             try {
                 recognition.start();
             } catch (e) {
                 console.error('Could not start recognition:', e);
-                voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500 mr-2"></i> Voice recognition is not supported or failed to start.`;
+                voiceStatus.innerHTML = `<i class="fas fa-exclamation-triangle text-red-500"></i><span>Failed to start voice recognition</span>`;
+            }
+        }
+        
+        // Setup toggle button
+        function setupToggleButton() {
+            const btn = document.getElementById('toggle-listening');
+            if (btn) {
+                btn.onclick = () => {
+                    isListening = !isListening;
+                    if (isListening) {
+                        recognition.start();
+                        btn.innerHTML = '<i class="fas fa-pause"></i>';
+                        voiceStatus.innerHTML = `
+                            <div class="voice-wave text-green-400">
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                                <div class="wave-bar"></div>
+                            </div>
+                            <span class="text-white font-medium">Listening for commands...</span>
+                            <button id="toggle-listening" class="command-button rounded-full p-2 text-white">
+                                <i class="fas fa-pause"></i>
+                            </button>
+                        `;
+                        setupToggleButton();
+                    } else {
+                        recognition.stop();
+                        btn.innerHTML = '<i class="fas fa-play"></i>';
+                        voiceStatus.innerHTML = `
+                            <i class="fas fa-microphone-slash text-red-400"></i>
+                            <span class="text-white font-medium">Voice recognition paused</span>
+                            <button id="toggle-listening" class="command-button rounded-full p-2 text-white">
+                                <i class="fas fa-play"></i>
+                            </button>
+                        `;
+                        setupToggleButton();
+                    }
+                };
+            }
+        }
+        
+        // Event listeners
+        quickNote.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                addNote(e.target.value.trim());
+                e.target.value = '';
             }
         });
+        
+        quickTask.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter' && e.target.value.trim()) {
+                addTodo(e.target.value.trim());
+                e.target.value = '';
+            }
+        });
+        
+        document.getElementById('timer-start').onclick = startTimer;
+        document.getElementById('timer-pause').onclick = pauseTimer;
+        document.getElementById('timer-reset').onclick = resetTimer;
+        document.getElementById('refresh-weather').onclick = fetchWeather;
+        document.getElementById('export-notes').onclick = exportNotes;
+        document.getElementById('clear-notes-btn').onclick = clearNotes;
+        document.getElementById('clear-tasks-btn').onclick = clearTodos;
+        
+        // Initialize everything
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            updateTime();
+            updateStats();
+            renderNotes();
+            renderTodos();
+            fetchWeather();
+            setupSpeechRecognition();
+            setupToggleButton();
+            
+            // Update time every second
+            setInterval(updateTime, 1000);
+            
+            // Reset daily commands counter at midnight
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            tomorrow.setHours(0, 0, 0, 0);
+            const msUntilMidnight = tomorrow.getTime() - now.getTime();
+            
+            setTimeout(() => {
+                commandsToday = 0;
+                localStorage.setItem('commandsToday', '0');
+                updateStats();
+                // Set interval for daily reset
+                setInterval(() => {
+                    commandsToday = 0;
+                    localStorage.setItem('commandsToday', '0');
+                    updateStats();
+                }, 24 * 60 * 60 * 1000);
+            }, msUntilMidnight);
+            
+            // Show welcome message
+            setTimeout(() => {
+                showNotification('Welcome to VocalHub! Try saying "Show Weather" or "Add note Hello World"');
+            }, 1000);
+        });
+        
+        // Make functions globally accessible
+        window.deleteNote = deleteNote;
+        window.deleteTodo = deleteTodo;
+        window.toggleTodo = toggleTodo;
     </script>
 </body>
 </html>
