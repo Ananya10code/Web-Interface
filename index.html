@@ -7,30 +7,48 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Crimson+Text:wght@400;600;700&family=Libre+Baskerville:wght@400;700&family=Source+Serif+Pro:wght@300;400;600;700&display=swap');
     
     :root {
       --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
       --glass-bg: rgba(255, 255, 255, 0.15);
       --glass-border: rgba(255, 255, 255, 0.2);
-      --sidebar-width: 320px;
+      --sidebar-width: 350px;
     }
     
     body {
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Source Serif Pro', serif;
       background: var(--primary-gradient);
       background-size: 400% 400%;
-      animation: gradientShift 20s ease infinite;
+      animation: gradientShift 25s ease infinite;
       min-height: 100vh;
       overflow-x: hidden;
+      font-weight: 400;
+      letter-spacing: 0.02em;
     }
     
-    .title-font { font-family: 'Space Grotesk', sans-serif; }
-    .body-font { font-family: 'Poppins', sans-serif; }
+    .title-font { 
+      font-family: 'Playfair Display', serif; 
+      font-weight: 800;
+      letter-spacing: -0.01em;
+    }
+    .body-font { 
+      font-family: 'Crimson Text', serif; 
+      font-weight: 400;
+      letter-spacing: 0.01em;
+      line-height: 1.6;
+    }
+    .accent-font { 
+      font-family: 'Libre Baskerville', serif; 
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
     
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
       100% { background-position: 0% 50%; }
     }
     
@@ -49,9 +67,9 @@
     }
     
     .stat-card {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
-      backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.06) 100%);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       position: relative;
       overflow: hidden;
     }
@@ -63,8 +81,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      animation: shimmer 4s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 5s infinite;
     }
     
     @keyframes shimmer {
@@ -87,7 +105,7 @@
       position: absolute;
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.08);
-      animation: float 8s ease-in-out infinite;
+      animation: float 12s ease-in-out infinite;
     }
     
     .floating-triangle {
@@ -95,32 +113,108 @@
       width: 0;
       height: 0;
       border-style: solid;
-      animation: triangleFloat 10s ease-in-out infinite;
+      animation: triangleFloat 15s ease-in-out infinite;
     }
     
-    .floating-square {
+    .floating-diamond {
       position: absolute;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.06);
+      transform: rotate(45deg);
+      animation: diamondFloat 18s ease-in-out infinite;
+    }
+    
+    .floating-hexagon {
+      position: absolute;
+      width: 60px;
+      height: 34.64px;
       background: rgba(255, 255, 255, 0.05);
-      animation: squareFloat 12s ease-in-out infinite;
-      border-radius: 8px;
+      position: relative;
+      animation: hexagonFloat 20s ease-in-out infinite;
+    }
+    
+    .floating-hexagon:before,
+    .floating-hexagon:after {
+      content: "";
+      position: absolute;
+      width: 0;
+      border-left: 30px solid transparent;
+      border-right: 30px solid transparent;
+    }
+    
+    .floating-hexagon:before {
+      bottom: 100%;
+      border-bottom: 17.32px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .floating-hexagon:after {
+      top: 100%;
+      border-top: 17.32px solid rgba(255, 255, 255, 0.05);
     }
     
     @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); opacity: 0.7; }
-      25% { transform: translateY(-30px) rotate(90deg) scale(1.1); opacity: 0.4; }
-      50% { transform: translateY(-20px) rotate(180deg) scale(0.9); opacity: 0.8; }
-      75% { transform: translateY(-40px) rotate(270deg) scale(1.05); opacity: 0.5; }
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg) scale(1); 
+        opacity: 0.6; 
+      }
+      25% { 
+        transform: translateY(-40px) rotate(90deg) scale(1.1); 
+        opacity: 0.3; 
+      }
+      50% { 
+        transform: translateY(-25px) rotate(180deg) scale(0.9); 
+        opacity: 0.8; 
+      }
+      75% { 
+        transform: translateY(-50px) rotate(270deg) scale(1.05); 
+        opacity: 0.4; 
+      }
     }
     
     @keyframes triangleFloat {
-      0%, 100% { transform: translateX(0px) rotate(0deg); }
-      33% { transform: translateX(20px) rotate(120deg); }
-      66% { transform: translateX(-15px) rotate(240deg); }
+      0%, 100% { 
+        transform: translateX(0px) rotate(0deg) scale(1); 
+        opacity: 0.5; 
+      }
+      33% { 
+        transform: translateX(30px) rotate(120deg) scale(1.2); 
+        opacity: 0.7; 
+      }
+      66% { 
+        transform: translateX(-20px) rotate(240deg) scale(0.8); 
+        opacity: 0.4; 
+      }
     }
     
-    @keyframes squareFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
-      50% { transform: translateY(-25px) rotate(180deg) scale(1.2); }
+    @keyframes diamondFloat {
+      0%, 100% { 
+        transform: rotate(45deg) translateY(0px) scale(1); 
+        opacity: 0.4; 
+      }
+      50% { 
+        transform: rotate(225deg) translateY(-35px) scale(1.3); 
+        opacity: 0.7; 
+      }
+    }
+    
+    @keyframes hexagonFloat {
+      0%, 100% { 
+        transform: translateY(0px) rotate(0deg); 
+        opacity: 0.3; 
+      }
+      25% { 
+        transform: translateY(-20px) rotate(60deg); 
+        opacity: 0.6; 
+      }
+      50% { 
+        transform: translateY(-40px) rotate(120deg); 
+        opacity: 0.4; 
+      }
+      75% { 
+        transform: translateY(-15px) rotate(180deg); 
+        opacity: 0.8; 
+      }
     }
     
     .sidebar {
@@ -129,13 +223,14 @@
       left: 0;
       width: var(--sidebar-width);
       height: 100vh;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(25px);
-      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(30px);
+      border-right: 1px solid rgba(255, 255, 255, 0.15);
       transform: translateX(-100%);
-      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
       z-index: 1000;
       overflow-y: auto;
+      box-shadow: 10px 0 30px rgba(0, 0, 0, 0.3);
     }
     
     .sidebar.open {
@@ -144,7 +239,7 @@
     
     .main-content {
       margin-left: 0;
-      transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: margin-left 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .main-content.shifted {
@@ -154,36 +249,28 @@
     .chat-item {
       transition: all 0.3s ease;
       border-left: 3px solid transparent;
+      cursor: pointer;
     }
     
     .chat-item:hover {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.15);
       border-left-color: #10b981;
-      transform: translateX(5px);
-    }
-    
-    .pulse-border {
-      animation: pulseBorder 2s ease-in-out infinite;
-    }
-    
-    @keyframes pulseBorder {
-      0%, 100% { border-color: rgba(34, 197, 94, 0.5); }
-      50% { border-color: rgba(34, 197, 94, 1); }
+      transform: translateX(8px);
     }
     
     .listening-glow {
-      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
-      animation: listeningGlow 1.5s ease-in-out infinite alternate;
+      box-shadow: 0 0 40px rgba(34, 197, 94, 0.7);
+      animation: listeningGlow 2s ease-in-out infinite alternate;
     }
     
     @keyframes listeningGlow {
       from { 
-        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        box-shadow: 0 0 30px rgba(34, 197, 94, 0.5);
         transform: scale(1);
       }
       to { 
-        box-shadow: 0 0 40px rgba(34, 197, 94, 0.8);
-        transform: scale(1.02);
+        box-shadow: 0 0 60px rgba(34, 197, 94, 0.9);
+        transform: scale(1.03);
       }
     }
     
@@ -192,6 +279,7 @@
       transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
+      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
     }
     
     .btn-primary::before {
@@ -201,8 +289,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      transition: left 0.6s;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+      transition: left 0.8s;
     }
     
     .btn-primary:hover::before {
@@ -210,8 +298,8 @@
     }
     
     .btn-primary:hover {
-      transform: translateY(-3px) scale(1.05);
-      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 20px 40px rgba(16, 185, 129, 0.6);
     }
     
     .calc-btn {
@@ -219,35 +307,37 @@
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
       transition: all 0.3s ease;
-      font-family: 'Space Grotesk', monospace;
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
     }
     
     .calc-btn:hover {
-      background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.08) rotate(2deg);
+      background: rgba(255, 255, 255, 0.35);
+      transform: scale(1.1) rotate(3deg);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     }
     
     .title-gradient {
-      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 30%, #dbeafe 70%, #bfdbfe 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f8fafc 20%, #e2e8f0 40%, #cbd5e1 60%, #94a3b8 80%, #64748b 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: titleShine 3s ease-in-out infinite;
+      animation: titleShine 4s ease-in-out infinite;
     }
     
     @keyframes titleShine {
-      0%, 100% { filter: brightness(1); }
-      50% { filter: brightness(1.2); }
+      0%, 100% { filter: brightness(1) contrast(1); }
+      50% { filter: brightness(1.3) contrast(1.2); }
     }
     
     .slide-in {
-      animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: slideIn 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
     @keyframes slideIn {
       0% {
         opacity: 0;
-        transform: translateY(60px) scale(0.8) rotateX(10deg);
+        transform: translateY(80px) scale(0.8) rotateX(15deg);
       }
       100% {
         opacity: 1;
@@ -257,22 +347,22 @@
     
     .status-indicator {
       position: relative;
-      animation: statusBounce 2s ease-in-out infinite;
+      animation: statusBounce 3s ease-in-out infinite;
     }
     
     @keyframes statusBounce {
       0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-5px); }
+      50% { transform: translateY(-8px); }
     }
     
     .status-indicator::after {
       content: '';
       position: absolute;
       top: 50%;
-      right: -35px;
+      right: -40px;
       transform: translateY(-50%);
-      width: 22px;
-      height: 22px;
+      width: 24px;
+      height: 24px;
       background: radial-gradient(circle, #10b981 0%, #059669 100%);
       border-radius: 50%;
       animation: statusPulse 2s infinite;
@@ -285,48 +375,44 @@
         box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
       }
       50% { 
-        transform: translateY(-50%) scale(1.3); 
+        transform: translateY(-50%) scale(1.4); 
         opacity: 0.8;
-        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+        box-shadow: 0 0 0 15px rgba(16, 185, 129, 0);
       }
     }
     
-    .morphing-bg {
-      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
-      background-size: 300% 300%;
-      animation: morphingGradient 15s ease infinite;
+    .card-hover-effect:hover {
+      animation: cardFloat 0.8s ease-in-out;
     }
     
-    @keyframes morphingGradient {
-      0% { background-position: 0% 50%; }
-      25% { background-position: 100% 50%; }
-      50% { background-position: 100% 100%; }
-      75% { background-position: 0% 100%; }
-      100% { background-position: 0% 50%; }
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-5px) rotate(0.5deg); }
+      75% { transform: translateY(-8px) rotate(-0.5deg); }
     }
     
     .notification-enter {
-      animation: notificationSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      animation: notificationSlide 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
     
     @keyframes notificationSlide {
       0% {
-        transform: translateX(400px) rotate(10deg);
+        transform: translateX(400px) rotate(15deg) scale(0.8);
         opacity: 0;
       }
       100% {
-        transform: translateX(0) rotate(0deg);
+        transform: translateX(0) rotate(0deg) scale(1);
         opacity: 1;
       }
     }
     
     .hamburger {
       cursor: pointer;
-      width: 30px;
-      height: 22px;
+      width: 35px;
+      height: 26px;
       position: relative;
       transform: rotate(0deg);
-      transition: 0.5s ease-in-out;
+      transition: 0.6s ease-in-out;
     }
     
     .hamburger span {
@@ -339,15 +425,15 @@
       opacity: 1;
       left: 0;
       transform: rotate(0deg);
-      transition: 0.25s ease-in-out;
+      transition: 0.3s ease-in-out;
     }
     
     .hamburger span:nth-child(1) { top: 0px; }
-    .hamburger span:nth-child(2) { top: 10px; }
-    .hamburger span:nth-child(3) { top: 20px; }
+    .hamburger span:nth-child(2) { top: 12px; }
+    .hamburger span:nth-child(3) { top: 24px; }
     
     .hamburger.open span:nth-child(1) {
-      top: 11px;
+      top: 12px;
       transform: rotate(135deg);
     }
     
@@ -357,30 +443,17 @@
     }
     
     .hamburger.open span:nth-child(3) {
-      top: 11px;
+      top: 12px;
       transform: rotate(-135deg);
-    }
-    
-    .card-hover-effect:hover {
-      animation: cardFloat 0.6s ease-in-out;
-    }
-    
-    @keyframes cardFloat {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(1deg); }
     }
     
     @media (max-width: 768px) {
       :root {
-        --sidebar-width: 280px;
+        --sidebar-width: 100vw;
       }
       
       .main-content.shifted {
         margin-left: 0;
-      }
-      
-      .sidebar {
-        width: 100vw;
       }
     }
   </style>
@@ -390,53 +463,58 @@
   <!-- Enhanced Floating Background Elements -->
   <div class="floating-elements">
     <!-- Circles -->
-    <div class="floating-circle" style="width: 120px; height: 120px; top: 8%; left: 12%; animation-delay: 0s;"></div>
-    <div class="floating-circle" style="width: 180px; height: 180px; top: 15%; right: 10%; animation-delay: 3s;"></div>
-    <div class="floating-circle" style="width: 90px; height: 90px; bottom: 25%; left: 15%; animation-delay: 6s;"></div>
-    <div class="floating-circle" style="width: 140px; height: 140px; bottom: 12%; right: 8%; animation-delay: 1.5s;"></div>
-    <div class="floating-circle" style="width: 60px; height: 60px; top: 40%; left: 50%; animation-delay: 4s;"></div>
+    <div class="floating-circle" style="width: 140px; height: 140px; top: 8%; left: 12%; animation-delay: 0s;"></div>
+    <div class="floating-circle" style="width: 200px; height: 200px; top: 15%; right: 10%; animation-delay: 4s;"></div>
+    <div class="floating-circle" style="width: 100px; height: 100px; bottom: 25%; left: 15%; animation-delay: 8s;"></div>
+    <div class="floating-circle" style="width: 160px; height: 160px; bottom: 12%; right: 8%; animation-delay: 2s;"></div>
+    <div class="floating-circle" style="width: 80px; height: 80px; top: 45%; left: 45%; animation-delay: 6s;"></div>
     
     <!-- Triangles -->
-    <div class="floating-triangle" style="top: 20%; left: 30%; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 45px solid rgba(255,255,255,0.06); animation-delay: 2s;"></div>
-    <div class="floating-triangle" style="bottom: 30%; right: 25%; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid rgba(255,255,255,0.04); animation-delay: 7s;"></div>
+    <div class="floating-triangle" style="top: 20%; left: 30%; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 50px solid rgba(255,255,255,0.06); animation-delay: 3s;"></div>
+    <div class="floating-triangle" style="bottom: 30%; right: 25%; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 40px solid rgba(255,255,255,0.04); animation-delay: 9s;"></div>
+    <div class="floating-triangle" style="top: 60%; left: 70%; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid rgba(255,255,255,0.05); animation-delay: 12s;"></div>
     
-    <!-- Squares -->
-    <div class="floating-square" style="width: 40px; height: 40px; top: 60%; left: 20%; animation-delay: 5s;"></div>
-    <div class="floating-square" style="width: 55px; height: 55px; top: 35%; right: 30%; animation-delay: 1s;"></div>
-    <div class="floating-square" style="width: 30px; height: 30px; bottom: 40%; left: 60%; animation-delay: 8s;"></div>
+    <!-- Diamonds -->
+    <div class="floating-diamond" style="top: 30%; right: 15%; animation-delay: 5s;"></div>
+    <div class="floating-diamond" style="bottom: 40%; left: 25%; animation-delay: 10s;"></div>
+    <div class="floating-diamond" style="top: 70%; right: 40%; animation-delay: 1s;"></div>
+    
+    <!-- Hexagons -->
+    <div class="floating-hexagon" style="top: 50%; left: 10%; animation-delay: 7s;"></div>
+    <div class="floating-hexagon" style="bottom: 15%; right: 60%; animation-delay: 11s;"></div>
   </div>
 
   <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
-    <div class="p-6">
-      <div class="flex items-center justify-between mb-8">
-        <h2 class="text-2xl font-bold title-font">Chat History</h2>
-        <button onclick="toggleSidebar()" class="text-white/60 hover:text-white transition-colors">
+    <div class="p-8">
+      <div class="flex items-center justify-between mb-10">
+        <h2 class="text-3xl font-bold title-font">Chat History</h2>
+        <button onclick="toggleSidebar()" class="text-white/60 hover:text-white transition-colors duration-300">
           <i class="fas fa-times text-xl"></i>
         </button>
       </div>
       
-      <div class="space-y-3" id="chat-history">
+      <div class="space-y-4" id="chat-history">
         <!-- Chat history will be populated here -->
       </div>
       
-      <div class="mt-8 p-4 glass-card rounded-lg">
-        <h3 class="font-semibold mb-3 body-font flex items-center">
-          <i class="fas fa-chart-line mr-2 text-blue-300"></i>
-          Today's Stats
+      <div class="mt-10 p-6 glass-card rounded-xl">
+        <h3 class="font-semibold mb-4 accent-font flex items-center text-lg">
+          <i class="fas fa-chart-line mr-3 text-blue-300"></i>
+          Session Statistics
         </h3>
-        <div class="space-y-2 text-sm">
-          <div class="flex justify-between">
-            <span>Commands</span>
-            <span id="sidebar-commands">0</span>
+        <div class="space-y-3 text-sm body-font">
+          <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+            <span>Voice Commands</span>
+            <span id="sidebar-commands" class="font-bold">0</span>
           </div>
-          <div class="flex justify-between">
-            <span>Cards Created</span>
-            <span id="sidebar-cards">0</span>
+          <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+            <span>Active Cards</span>
+            <span id="sidebar-cards" class="font-bold">0</span>
           </div>
-          <div class="flex justify-between">
-            <span>Session Time</span>
-            <span id="session-time">0m</span>
+          <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+            <span>Session Duration</span>
+            <span id="session-time" class="font-bold">0m</span>
           </div>
         </div>
       </div>
@@ -444,112 +522,112 @@
   </div>
 
   <!-- Main Content -->
-  <div id="main-content" class="main-content p-6 lg:p-10">
+  <div id="main-content" class="main-content p-6 lg:p-12">
     <div class="max-w-7xl mx-auto">
       
       <!-- Header Section with Hamburger -->
-      <div class="flex items-center mb-8">
+      <div class="flex items-center mb-10">
         <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
           <span></span>
           <span></span>
           <span></span>
         </div>
-        <div class="ml-6 text-sm text-white/70 body-font">
-          <i class="fas fa-history mr-2"></i>View Chat History
+        <div class="ml-8 text-sm text-white/70 accent-font">
+          <i class="fas fa-history mr-2"></i>View Previous Sessions
         </div>
       </div>
       
       <!-- Title Section -->
-      <div class="text-center mb-12">
-        <div class="inline-block p-6 glass-card rounded-full mb-6 morphing-bg">
-          <i class="fas fa-microphone-alt text-6xl text-white"></i>
+      <div class="text-center mb-16">
+        <div class="inline-block p-8 glass-card rounded-full mb-8">
+          <i class="fas fa-microphone-alt text-7xl text-white"></i>
         </div>
-        <h1 class="text-6xl lg:text-7xl font-black mb-4 title-gradient title-font">
+        <h1 class="text-7xl lg:text-8xl font-black mb-6 title-gradient title-font tracking-tight">
           VocalHub
         </h1>
-        <p class="text-2xl lg:text-3xl font-light mb-6 opacity-90 body-font">AI-Powered Voice Dashboard</p>
-        <div id="status" class="inline-block px-8 py-4 glass-card rounded-full font-semibold text-lg status-indicator hidden listening-glow">
-          <i class="fas fa-headphones mr-3"></i>
-          <span class="body-font">🎧 Listening...</span>
+        <p class="text-3xl lg:text-4xl font-light mb-8 opacity-90 body-font">Sophisticated Voice Command Interface</p>
+        <div id="status" class="inline-block px-10 py-5 glass-card rounded-full font-semibold text-xl status-indicator hidden listening-glow">
+          <i class="fas fa-headphones mr-4"></i>
+          <span class="accent-font">Listening intently...</span>
         </div>
       </div>
 
       <!-- Stats Cards -->
-      <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect">
-          <div class="text-blue-300 mb-4">
+      <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 mb-16">
+        <div class="stat-card p-10 rounded-3xl text-center slide-in card-hover-effect">
+          <div class="text-blue-300 mb-5">
             <i class="fas fa-sticky-note text-4xl"></i>
           </div>
-          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Active Notes</h2>
-          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="notes-count">0</p>
-          <div class="w-full bg-white/20 rounded-full h-3">
-            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+          <h2 class="text-2xl font-semibold mb-5 opacity-90 title-font tracking-wide">Active Notes</h2>
+          <p class="text-6xl lg:text-7xl font-black mb-4 body-font" id="notes-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-4">
+            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-4 rounded-full transition-all duration-1500" style="width: 0%"></div>
           </div>
         </div>
         
-        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect" style="animation-delay: 0.2s;">
-          <div class="text-purple-300 mb-4">
+        <div class="stat-card p-10 rounded-3xl text-center slide-in card-hover-effect" style="animation-delay: 0.3s;">
+          <div class="text-purple-300 mb-5">
             <i class="fas fa-tasks text-4xl"></i>
           </div>
-          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Pending Tasks</h2>
-          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="tasks-count">0</p>
-          <div class="w-full bg-white/20 rounded-full h-3">
-            <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+          <h2 class="text-2xl font-semibold mb-5 opacity-90 title-font tracking-wide">Pending Tasks</h2>
+          <p class="text-6xl lg:text-7xl font-black mb-4 body-font" id="tasks-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-4">
+            <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-4 rounded-full transition-all duration-1500" style="width: 0%"></div>
           </div>
         </div>
         
-        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect" style="animation-delay: 0.4s;">
-          <div class="text-green-300 mb-4">
+        <div class="stat-card p-10 rounded-3xl text-center slide-in card-hover-effect" style="animation-delay: 0.6s;">
+          <div class="text-green-300 mb-5">
             <i class="fas fa-bolt text-4xl"></i>
           </div>
-          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Commands Today</h2>
-          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="commands-count">0</p>
-          <div class="w-full bg-white/20 rounded-full h-3">
-            <div class="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+          <h2 class="text-2xl font-semibold mb-5 opacity-90 title-font tracking-wide">Commands Today</h2>
+          <p class="text-6xl lg:text-7xl font-black mb-4 body-font" id="commands-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-4">
+            <div class="bg-gradient-to-r from-green-400 to-green-600 h-4 rounded-full transition-all duration-1500" style="width: 0%"></div>
           </div>
         </div>
       </div>
 
       <!-- Dynamic Cards Container -->
-      <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mb-12"></div>
+      <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10 mb-16"></div>
 
       <!-- Control Button -->
       <div class="text-center">
-        <button onclick="startVoiceRecognition()" class="btn-primary px-10 py-5 rounded-full text-xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden body-font">
+        <button onclick="startVoiceRecognition()" class="btn-primary px-12 py-6 rounded-full text-2xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden accent-font">
           <span class="relative z-10">
-            <i class="fas fa-microphone mr-3"></i>Start Listening
+            <i class="fas fa-microphone mr-4"></i>Begin Voice Recognition
           </span>
         </button>
         
         <!-- Quick Commands Guide -->
-        <div class="mt-10 glass-card p-8 rounded-2xl inline-block max-w-4xl">
-          <h3 class="text-xl font-semibold mb-6 text-center title-font tracking-wide">
-            <i class="fas fa-lightbulb mr-2 text-yellow-300"></i>Voice Commands
+        <div class="mt-12 glass-card p-10 rounded-3xl inline-block max-w-5xl">
+          <h3 class="text-2xl font-semibold mb-8 text-center title-font tracking-wide">
+            <i class="fas fa-lightbulb mr-3 text-yellow-300"></i>Available Voice Commands
           </h3>
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm accent-font">
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fas fa-cloud-sun text-yellow-300 w-5"></i>
-              <span>"Show weather"</span>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-base accent-font">
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-cloud-sun text-yellow-300 w-6 text-xl"></i>
+              <span>"Show weather forecast"</span>
             </div>
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fas fa-calculator text-green-300 w-5"></i>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-calculator text-green-300 w-6 text-xl"></i>
               <span>"Show calculator"</span>
             </div>
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fas fa-map-marker-alt text-red-300 w-5"></i>
-              <span>"Show GPS"</span>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-map-marker-alt text-red-300 w-6 text-xl"></i>
+              <span>"Show GPS location"</span>
             </div>
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fas fa-clock text-blue-300 w-5"></i>
-              <span>"Show clock"</span>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-clock text-blue-300 w-6 text-xl"></i>
+              <span>"Show live clock"</span>
             </div>
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fab fa-youtube text-red-500 w-5"></i>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fab fa-youtube text-red-500 w-6 text-xl"></i>
               <span>"Show YouTube"</span>
             </div>
-            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
-              <i class="fas fa-music text-pink-300 w-5"></i>
-              <span>"Play music"</span>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-music text-pink-300 w-6 text-xl"></i>
+              <span>"Play background music"</span>
             </div>
           </div>
         </div>
@@ -593,10 +671,11 @@ function addToChatHistory(command, action) {
   chatHistory.unshift({
     command: command,
     action: action,
-    time: timestamp
+    time: timestamp,
+    date: new Date().toLocaleDateString()
   });
   
-  if (chatHistory.length > 20) {
+  if (chatHistory.length > 25) {
     chatHistory.pop();
   }
   
@@ -607,14 +686,27 @@ function updateChatHistoryDisplay() {
   const historyContainer = document.getElementById('chat-history');
   historyContainer.innerHTML = '';
   
+  if (chatHistory.length === 0) {
+    historyContainer.innerHTML = `
+      <div class="text-center p-6 opacity-60">
+        <i class="fas fa-comments text-3xl mb-3 block"></i>
+        <p class="body-font">No conversations yet. Start by giving a voice command!</p>
+      </div>
+    `;
+    return;
+  }
+  
   chatHistory.forEach((item, index) => {
     const chatItem = document.createElement('div');
-    chatItem.className = 'chat-item p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer';
+    chatItem.className = 'chat-item p-4 rounded-xl bg-white/5 hover:bg-white/15 transition-all';
     chatItem.style.animationDelay = (index * 0.1) + 's';
     chatItem.innerHTML = `
-      <div class="text-sm font-medium body-font mb-1">${item.action}</div>
-      <div class="text-xs text-white/60 mb-2">"${item.command}"</div>
-      <div class="text-xs text-white/40">${item.time}</div>
+      <div class="text-base font-medium accent-font mb-2">${item.action}</div>
+      <div class="text-sm text-white/70 mb-3 body-font italic">"${item.command}"</div>
+      <div class="flex justify-between text-xs text-white/50">
+        <span>${item.time}</span>
+        <span>${item.date}</span>
+      </div>
     `;
     historyContainer.appendChild(chatItem);
   });
@@ -630,20 +722,48 @@ function toggleSidebar() {
   hamburger.classList.toggle('open');
 }
 
+function showNotification(message, type = 'info', icon = 'fa-info-circle') {
+  const colors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    warning: 'bg-yellow-500',
+    info: 'bg-blue-500'
+  };
+  
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-8 py-5 rounded-xl shadow-lg z-50 notification-enter`;
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <i class="fas ${icon} mr-4 text-xl"></i>
+      <div class="accent-font">
+        <div class="font-bold text-lg">${message.title}</div>
+        <div class="text-sm body-font">${message.subtitle}</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.transform = 'translateX(400px)';
+    notification.style.opacity = '0';
+    setTimeout(() => notification.remove(), 300);
+  }, 5000);
+}
+
 function createCard(id, title, icon, html) {
   if (document.getElementById(id)) return;
   
   const card = document.createElement("div");
   card.id = id;
-  card.className = "glass-card p-8 rounded-2xl slide-in card-hover-effect";
+  card.className = "glass-card p-10 rounded-3xl slide-in card-hover-effect";
   card.innerHTML = `
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold flex items-center title-font">
-        <i class="fas ${icon} mr-3 text-2xl"></i>
+    <div class="flex items-center justify-between mb-8">
+      <h2 class="text-3xl font-bold flex items-center title-font">
+        <i class="fas ${icon} mr-4 text-3xl"></i>
         ${title}
       </h2>
       <button onclick="removeCard('${id}')" class="text-white/60 hover:text-red-400 transition-colors duration-300 hover:scale-110">
-        <i class="fas fa-times text-lg"></i>
+        <i class="fas fa-times text-xl"></i>
       </button>
     </div>
     <div class="text-white body-font">${html}</div>
@@ -666,69 +786,47 @@ function removeCard(id) {
     card.style.transform = 'scale(0.8) rotateY(90deg)';
     card.style.opacity = '0';
     setTimeout(() => card.remove(), 400);
+    updateStats();
   }
-}
-
-function showNotification(message, type = 'info', icon = 'fa-info-circle') {
-  const colors = {
-    success: 'bg-green-500',
-    error: 'bg-red-500',
-    warning: 'bg-yellow-500',
-    info: 'bg-blue-500'
-  };
-  
-  const notification = document.createElement('div');
-  notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg z-50 notification-enter`;
-  notification.innerHTML = `
-    <div class="flex items-center">
-      <i class="fas ${icon} mr-3"></i>
-      <div class="body-font">
-        <div class="font-bold">${message.title}</div>
-        <div class="text-sm">${message.subtitle}</div>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.style.transform = 'translateX(400px)';
-    setTimeout(() => notification.remove(), 300);
-  }, 4000);
 }
 
 function showWeather() {
   const weatherData = [
-    { temp: 22, condition: "Sunny", humidity: 45, location: "New York", wind: "12 km/h" },
-    { temp: 18, condition: "Cloudy", humidity: 65, location: "London", wind: "8 km/h" },
-    { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle", wind: "15 km/h" },
-    { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles", wind: "5 km/h" }
+    { temp: 22, condition: "Sunny", humidity: 45, location: "New York", wind: "12 km/h", uv: "6" },
+    { temp: 18, condition: "Cloudy", humidity: 65, location: "London", wind: "8 km/h", uv: "3" },
+    { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle", wind: "15 km/h", uv: "2" },
+    { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles", wind: "5 km/h", uv: "8" }
   ];
   
   const weather = weatherData[Math.floor(Math.random() * weatherData.length)];
   
   createCard("weather-card", "Weather Forecast", "fa-cloud-sun text-yellow-300", `
-    <div class="grid grid-cols-2 gap-4 mb-6">
-      <div class="text-center p-4 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm">
-        <div class="text-4xl font-black mb-2 body-font">${weather.temp}°C</div>
-        <div class="text-sm opacity-75">Temperature</div>
+    <div class="grid grid-cols-2 gap-6 mb-8">
+      <div class="text-center p-6 bg-gradient-to-br from-white/15 to-white/5 rounded-2xl backdrop-blur-sm">
+        <div class="text-5xl font-black mb-3 title-font">${weather.temp}°C</div>
+        <div class="text-base opacity-80">Temperature</div>
       </div>
-      <div class="text-center p-4 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm">
-        <div class="text-lg font-semibold mb-2">${weather.condition}</div>
-        <div class="text-sm opacity-75">Condition</div>
+      <div class="text-center p-6 bg-gradient-to-br from-white/15 to-white/5 rounded-2xl backdrop-blur-sm">
+        <div class="text-2xl font-semibold mb-3 accent-font">${weather.condition}</div>
+        <div class="text-base opacity-80">Current Condition</div>
       </div>
     </div>
-    <div class="space-y-3 text-sm">
-      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
-        <span class="flex items-center"><i class="fas fa-tint mr-2 text-blue-300"></i>Humidity</span>
-        <span>${weather.humidity}%</span>
+    <div class="space-y-4 text-base">
+      <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+        <span class="flex items-center"><i class="fas fa-tint mr-3 text-blue-300 text-lg"></i>Humidity</span>
+        <span class="font-semibold">${weather.humidity}%</span>
       </div>
-      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
-        <span class="flex items-center"><i class="fas fa-wind mr-2 text-gray-300"></i>Wind Speed</span>
-        <span>${weather.wind}</span>
+      <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+        <span class="flex items-center"><i class="fas fa-wind mr-3 text-gray-300 text-lg"></i>Wind Speed</span>
+        <span class="font-semibold">${weather.wind}</span>
       </div>
-      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
-        <span class="flex items-center"><i class="fas fa-map-marker-alt mr-2 text-red-300"></i>Location</span>
-        <span>${weather.location}</span>
+      <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+        <span class="flex items-center"><i class="fas fa-sun mr-3 text-yellow-300 text-lg"></i>UV Index</span>
+        <span class="font-semibold">${weather.uv}</span>
+      </div>
+      <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl">
+        <span class="flex items-center"><i class="fas fa-map-marker-alt mr-3 text-red-300 text-lg"></i>Location</span>
+        <span class="font-semibold">${weather.location}</span>
       </div>
     </div>
   `);
@@ -737,10 +835,285 @@ function showWeather() {
 }
 
 function showCalculator() {
-  createCard("calculator-card", "Calculator", "fa-calculator text-green-300", `
-    <div class="bg-black/40 p-4 rounded-xl mb-4 border border-white/10">
-      <input id="calc-display" type="text" disabled class="w-full p-4 bg-transparent text-3xl text-right text-white border-none outline-none title-font" value="0"/>
+  createCard("calculator-card", "Advanced Calculator", "fa-calculator text-green-300", `
+    <div class="bg-black/50 p-6 rounded-2xl mb-6 border border-white/10">
+      <input id="calc-display" type="text" disabled class="w-full p-5 bg-transparent text-4xl text-right text-white border-none outline-none title-font" value="0"/>
     </div>
-    <div class="grid grid-cols-4 gap-3">
-      ${["C","±","%","/","7","8","9","×","4","5","6","-","1","2","3","+","0",".","⌫","="].map(v =>
-        `<button
+    <div class="grid grid-cols-4 gap-4">
+      ${["C","±","%","÷","7","8","9","×","4","5","6","−","1","2","3","+","0",".","⌫","="].map(v =>
+        `<button onclick="calcInput('${v}')" class="calc-btn rounded-2xl p-4 text-xl font-semibold hover:scale-110 transition-all duration-300">${v}</button>`).join("")}
+    </div>
+    <button onclick="calcClear()" class="w-full bg-red-500/80 hover:bg-red-500 rounded-2xl mt-6 p-4 font-semibold transition-all duration-300 accent-font text-lg">
+      <i class="fas fa-trash mr-3"></i>Clear All
+    </button>`);
+  
+  addToChatHistory("show calculator", "Advanced Calculator");
+}
+
+let calcVal = "";
+function calcInput(val) {
+  const display = document.getElementById("calc-display");
+  if (!display) return;
+  
+  if (val === "=") {
+    try { 
+      // Replace display symbols with JavaScript operators
+      let expression = calcVal.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
+      calcVal = eval(expression).toString(); 
+    } catch { 
+      calcVal = "Error"; 
+    }
+  } else if (val === "C") {
+    calcVal = "0";
+  } else if (val === "⌫") {
+    calcVal = calcVal.slice(0, -1) || "0";
+  } else if (val === "±") {
+    if (calcVal !== "0" && !calcVal.includes("Error")) {
+      calcVal = calcVal.startsWith("-") ? calcVal.slice(1) : "-" + calcVal;
+    }
+  } else { 
+    if (calcVal === "0" && val !== ".") calcVal = "";
+    calcVal += val; 
+  }
+  
+  display.value = calcVal || "0";
+}
+
+function calcClear() {
+  calcVal = "";
+  const display = document.getElementById("calc-display");
+  if (display) display.value = "0";
+}
+
+function showGPS() {
+  createCard("gps-card", "GPS Location Services", "fa-map-marker-alt text-red-300", `
+    <div class="text-center">
+      <div class="inline-block p-6 bg-white/10 rounded-full mb-6">
+        <i class="fas fa-location-arrow text-4xl text-red-300 animate-spin"></i>
+      </div>
+      <p id='gps-info' class="text-xl accent-font">
+        <i class="fas fa-spinner fa-spin mr-3"></i>Acquiring precise location...
+      </p>
+    </div>
+  `);
+  
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const info = document.getElementById("gps-info");
+      if (info) {
+        info.innerHTML = `
+          <div class="space-y-4 text-left">
+            <div class="p-4 bg-white/5 rounded-xl">
+              <strong class="accent-font">Latitude:</strong> 
+              <span class="body-font">${pos.coords.latitude.toFixed(6)}</span>
+            </div>
+            <div class="p-4 bg-white/5 rounded-xl">
+              <strong class="accent-font">Longitude:</strong> 
+              <span class="body-font">${pos.coords.longitude.toFixed(6)}</span>
+            </div>
+            <div class="p-4 bg-white/5 rounded-xl">
+              <strong class="accent-font">Accuracy:</strong> 
+              <span class="body-font">±${Math.round(pos.coords.accuracy)} meters</span>
+            </div>
+            ${pos.coords.altitude ? `
+            <div class="p-4 bg-white/5 rounded-xl">
+              <strong class="accent-font">Altitude:</strong> 
+              <span class="body-font">${Math.round(pos.coords.altitude)} meters</span>
+            </div>` : ''}
+          </div>
+        `;
+      }
+    }, 
+    (error) => {
+      const info = document.getElementById("gps-info");
+      if (info) {
+        info.innerHTML = `
+          <div class="text-red-300 text-center">
+            <i class="fas fa-exclamation-triangle mr-3 text-2xl"></i>
+            <div class="accent-font text-lg">Location Access Denied</div>
+            <div class="body-font text-sm mt-2">Please enable location services to use GPS features</div>
+          </div>
+        `;
+      }
+    },
+    { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 }
+  );
+  
+  addToChatHistory("show gps", "GPS Location Services");
+}
+
+function showClock() {
+  createCard("clock-card", "Live World Clock", "fa-clock text-blue-300", `
+    <div class="text-center">
+      <p id='clock-time' class='text-6xl font-mono font-bold mb-6 bg-black/30 p-6 rounded-2xl title-font'>--:--:--</p>
+      <p id='clock-date' class='text-xl opacity-80 accent-font mb-4'>Loading...</p>
+      <div class="grid grid-cols-2 gap-4 text-sm">
+        <div class="p-3 bg-white/5 rounded-lg">
+          <div class="font-semibold">UTC</div>
+          <div id="utc-time" class="body-font">--:--</div>
+        </div>
+        <div class="p-3 bg-white/5 rounded-lg">
+          <div class="font-semibold">Local</div>
+          <div id="local-time" class="body-font">--:--</div>
+        </div>
+      </div>
+    </div>
+  `);
+  
+  function updateClock() {
+    const now = new Date();
+    const timeEl = document.getElementById("clock-time");
+    const dateEl = document.getElementById("clock-date");
+    const utcEl = document.getElementById("utc-time");
+    const localEl = document.getElementById("local-time");
+    
+    if (timeEl && dateEl) {
+      timeEl.textContent = now.toLocaleTimeString();
+      dateEl.textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+      
+      if (utcEl) utcEl.textContent = now.toUTCString().split(' ')[4];
+      if (localEl) localEl.textContent = now.toLocaleTimeString();
+    }
+  }
+  
+  updateClock();
+  setInterval(updateClock, 1000);
+  
+  addToChatHistory("show clock", "Live World Clock");
+}
+
+function showTime() {
+  const now = new Date();
+  showNotification({
+    title: "Current Time",
+    subtitle: now.toLocaleTimeString() + " • " + now.toLocaleDateString()
+  }, 'info', 'fa-clock');
+  
+  addToChatHistory("show time", "Time Display");
+}
+
+function showYouTube() {
+  createCard("youtube-card", "YouTube Portal", "fa-youtube text-red-500", `
+    <div class="text-center">
+      <div class="mb-8">
+        <i class="fab fa-youtube text-8xl text-red-500 mb-6 block"></i>
+        <p class="text-xl opacity-80 mb-6 body-font">Ready to explore endless video content?</p>
+      </div>
+      <button onclick="window.open('https://youtube.com','_blank')" 
+              class='px-8 py-4 bg-red-500 hover:bg-red-600 rounded-2xl font-semibold transition-all transform hover:scale-105 accent-font text-lg'>
+        <i class="fas fa-external-link-alt mr-3"></i>Launch YouTube
+      </button>
+    </div>
+  `);
+  
+  addToChatHistory("show youtube", "YouTube Portal");
+}
+
+function playMusic() {
+  const songs = [
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  ];
+  
+  const randomSong = songs[Math.floor(Math.random() * songs.length)];
+  const audio = new Audio(randomSong);
+  
+  showNotification({
+    title: "Music Player Active",
+    subtitle: "Ambient background music is now playing"
+  }, 'success', 'fa-music');
+  
+  audio.play().catch(e => {
+    showNotification({
+      title: "Audio Playback Failed",
+      subtitle: "Unable to play music - check browser permissions"
+    }, 'error', 'fa-exclamation-triangle');
+  });
+  
+  addToChatHistory("play music", "Music Player");
+}
+
+function startVoiceRecognition() {
+  const status = document.getElementById("status");
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  
+  if (!SpeechRecognition) {
+    showNotification({
+      title: "Speech Recognition Unavailable",
+      subtitle: "Your browser doesn't support voice recognition"
+    }, 'error', 'fa-microphone-slash');
+    return;
+  }
+
+  const recognition = new SpeechRecognition();
+  recognition.lang = "en-US";
+  recognition.continuous = false;
+  recognition.interimResults = false;
+
+  status.classList.remove("hidden");
+
+  recognition.onresult = (e) => {
+    const cmd = e.results[0][0].transcript.toLowerCase();
+    console.log("Voice command received:", cmd);
+    
+    if (cmd.includes("show weather") || cmd.includes("weather forecast")) {
+      showWeather();
+    } else if (cmd.includes("show calculator") || cmd.includes("calculator")) {
+      showCalculator();
+    } else if (cmd.includes("show gps") || cmd.includes("gps") || cmd.includes("location")) {
+      showGPS();
+    } else if (cmd.includes("show clock") || cmd.includes("live clock")) {
+      showClock();
+    } else if (cmd.includes("show youtube") || cmd.includes("youtube")) {
+      showYouTube();
+    } else if (cmd.includes("show time") || cmd.includes("current time")) {
+      showTime();
+    } else if (cmd.includes("play music") || cmd.includes("background music")) {
+      playMusic();
+    } else {
+      showNotification({
+        title: "Command Not Recognized",
+        subtitle: `"${cmd}" - Try one of the suggested commands`
+      }, 'warning', 'fa-question-circle');
+      
+      addToChatHistory(cmd, "Unrecognized Command");
+    }
+    
+    status.classList.add("hidden");
+  };
+
+  recognition.onerror = (e) => {
+    console.error("Speech recognition error:", e.error);
+    showNotification({
+      title: "Voice Recognition Error",
+      subtitle: "Please try again or check microphone permissions"
+    }, 'error', 'fa-microphone-slash');
+    status.classList.add("hidden");
+  };
+  
+  recognition.onend = () => status.classList.add("hidden");
+  recognition.start();
+}
+
+// Initialize application
+updateStats();
+updateChatHistoryDisplay();
+
+// Session time updater
+setInterval(updateSessionTime, 60000);
+
+// Welcome sequence
+document.addEventListener('DOMContentLoaded', function() {
+  setTimeout(() => {
+    showNotification({
+      title: "Welcome to VocalHub",
+      subtitle: "Click 'Begin Voice Recognition' to start your session"
+    }, 'info', 'fa-magic');
+  }, 1500);
+});
