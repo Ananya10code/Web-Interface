@@ -7,15 +7,26 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@300;400;500;600;700&family=Nunito:wght@300;400;500;600;700;800&display=swap');
+    
+    :root {
+      --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      --glass-bg: rgba(255, 255, 255, 0.15);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --sidebar-width: 320px;
+    }
     
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      font-family: 'Nunito', sans-serif;
+      background: var(--primary-gradient);
       background-size: 400% 400%;
-      animation: gradientShift 15s ease infinite;
+      animation: gradientShift 20s ease infinite;
       min-height: 100vh;
+      overflow-x: hidden;
     }
+    
+    .title-font { font-family: 'Space Grotesk', sans-serif; }
+    .body-font { font-family: 'Poppins', sans-serif; }
     
     @keyframes gradientShift {
       0% { background-position: 0% 50%; }
@@ -24,17 +35,17 @@
     }
     
     .glass-card {
-      background: rgba(255, 255, 255, 0.15);
+      background: var(--glass-bg);
       backdrop-filter: blur(20px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid var(--glass-border);
       box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
     
     .glass-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-      background: rgba(255, 255, 255, 0.2);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      background: rgba(255, 255, 255, 0.25);
     }
     
     .stat-card {
@@ -53,7 +64,7 @@
       width: 100%;
       height: 100%;
       background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      animation: shimmer 3s infinite;
+      animation: shimmer 4s infinite;
     }
     
     @keyframes shimmer {
@@ -69,18 +80,86 @@
       height: 100%;
       pointer-events: none;
       z-index: -1;
+      overflow: hidden;
     }
     
     .floating-circle {
       position: absolute;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      animation: float 6s ease-in-out infinite;
+      background: rgba(255, 255, 255, 0.08);
+      animation: float 8s ease-in-out infinite;
+    }
+    
+    .floating-triangle {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+      animation: triangleFloat 10s ease-in-out infinite;
+    }
+    
+    .floating-square {
+      position: absolute;
+      background: rgba(255, 255, 255, 0.05);
+      animation: squareFloat 12s ease-in-out infinite;
+      border-radius: 8px;
     }
     
     @keyframes float {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(180deg); }
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); opacity: 0.7; }
+      25% { transform: translateY(-30px) rotate(90deg) scale(1.1); opacity: 0.4; }
+      50% { transform: translateY(-20px) rotate(180deg) scale(0.9); opacity: 0.8; }
+      75% { transform: translateY(-40px) rotate(270deg) scale(1.05); opacity: 0.5; }
+    }
+    
+    @keyframes triangleFloat {
+      0%, 100% { transform: translateX(0px) rotate(0deg); }
+      33% { transform: translateX(20px) rotate(120deg); }
+      66% { transform: translateX(-15px) rotate(240deg); }
+    }
+    
+    @keyframes squareFloat {
+      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+      50% { transform: translateY(-25px) rotate(180deg) scale(1.2); }
+    }
+    
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-width);
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(25px);
+      border-right: 1px solid rgba(255, 255, 255, 0.1);
+      transform: translateX(-100%);
+      transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 1000;
+      overflow-y: auto;
+    }
+    
+    .sidebar.open {
+      transform: translateX(0);
+    }
+    
+    .main-content {
+      margin-left: 0;
+      transition: margin-left 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .main-content.shifted {
+      margin-left: var(--sidebar-width);
+    }
+    
+    .chat-item {
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+    
+    .chat-item:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-left-color: #10b981;
+      transform: translateX(5px);
     }
     
     .pulse-border {
@@ -93,18 +172,24 @@
     }
     
     .listening-glow {
-      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+      box-shadow: 0 0 30px rgba(34, 197, 94, 0.6);
       animation: listeningGlow 1.5s ease-in-out infinite alternate;
     }
     
     @keyframes listeningGlow {
-      from { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
-      to { box-shadow: 0 0 30px rgba(34, 197, 94, 0.7); }
+      from { 
+        box-shadow: 0 0 20px rgba(34, 197, 94, 0.4);
+        transform: scale(1);
+      }
+      to { 
+        box-shadow: 0 0 40px rgba(34, 197, 94, 0.8);
+        transform: scale(1.02);
+      }
     }
     
     .btn-primary {
       background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-      transition: all 0.3s ease;
+      transition: all 0.4s ease;
       position: relative;
       overflow: hidden;
     }
@@ -116,8 +201,8 @@
       left: -100%;
       width: 100%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-      transition: left 0.5s;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      transition: left 0.6s;
     }
     
     .btn-primary:hover::before {
@@ -125,169 +210,347 @@
     }
     
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
+      transform: translateY(-3px) scale(1.05);
+      box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
     }
     
     .calc-btn {
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
       border: 1px solid rgba(255, 255, 255, 0.3);
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
+      font-family: 'Space Grotesk', monospace;
     }
     
     .calc-btn:hover {
       background: rgba(255, 255, 255, 0.3);
-      transform: scale(1.05);
+      transform: scale(1.08) rotate(2deg);
     }
     
     .title-gradient {
-      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #dbeafe 100%);
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 30%, #dbeafe 70%, #bfdbfe 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      animation: titleShine 3s ease-in-out infinite;
+    }
+    
+    @keyframes titleShine {
+      0%, 100% { filter: brightness(1); }
+      50% { filter: brightness(1.2); }
     }
     
     .slide-in {
-      animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      animation: slideIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
     }
     
     @keyframes slideIn {
       0% {
         opacity: 0;
-        transform: translateY(50px) scale(0.9);
+        transform: translateY(60px) scale(0.8) rotateX(10deg);
       }
       100% {
         opacity: 1;
-        transform: translateY(0) scale(1);
+        transform: translateY(0) scale(1) rotateX(0deg);
       }
     }
     
     .status-indicator {
       position: relative;
+      animation: statusBounce 2s ease-in-out infinite;
+    }
+    
+    @keyframes statusBounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
     }
     
     .status-indicator::after {
       content: '';
       position: absolute;
       top: 50%;
-      right: -30px;
+      right: -35px;
       transform: translateY(-50%);
-      width: 20px;
-      height: 20px;
-      background: #10b981;
+      width: 22px;
+      height: 22px;
+      background: radial-gradient(circle, #10b981 0%, #059669 100%);
       border-radius: 50%;
       animation: statusPulse 2s infinite;
     }
     
     @keyframes statusPulse {
-      0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
-      50% { transform: translateY(-50%) scale(1.2); opacity: 0.7; }
+      0%, 100% { 
+        transform: translateY(-50%) scale(1); 
+        opacity: 1; 
+        box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      }
+      50% { 
+        transform: translateY(-50%) scale(1.3); 
+        opacity: 0.8;
+        box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+      }
+    }
+    
+    .morphing-bg {
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+      background-size: 300% 300%;
+      animation: morphingGradient 15s ease infinite;
+    }
+    
+    @keyframes morphingGradient {
+      0% { background-position: 0% 50%; }
+      25% { background-position: 100% 50%; }
+      50% { background-position: 100% 100%; }
+      75% { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .notification-enter {
+      animation: notificationSlide 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes notificationSlide {
+      0% {
+        transform: translateX(400px) rotate(10deg);
+        opacity: 0;
+      }
+      100% {
+        transform: translateX(0) rotate(0deg);
+        opacity: 1;
+      }
+    }
+    
+    .hamburger {
+      cursor: pointer;
+      width: 30px;
+      height: 22px;
+      position: relative;
+      transform: rotate(0deg);
+      transition: 0.5s ease-in-out;
+    }
+    
+    .hamburger span {
+      display: block;
+      position: absolute;
+      height: 3px;
+      width: 100%;
+      background: white;
+      border-radius: 9px;
+      opacity: 1;
+      left: 0;
+      transform: rotate(0deg);
+      transition: 0.25s ease-in-out;
+    }
+    
+    .hamburger span:nth-child(1) { top: 0px; }
+    .hamburger span:nth-child(2) { top: 10px; }
+    .hamburger span:nth-child(3) { top: 20px; }
+    
+    .hamburger.open span:nth-child(1) {
+      top: 11px;
+      transform: rotate(135deg);
+    }
+    
+    .hamburger.open span:nth-child(2) {
+      opacity: 0;
+      left: -60px;
+    }
+    
+    .hamburger.open span:nth-child(3) {
+      top: 11px;
+      transform: rotate(-135deg);
+    }
+    
+    .card-hover-effect:hover {
+      animation: cardFloat 0.6s ease-in-out;
+    }
+    
+    @keyframes cardFloat {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(1deg); }
+    }
+    
+    @media (max-width: 768px) {
+      :root {
+        --sidebar-width: 280px;
+      }
+      
+      .main-content.shifted {
+        margin-left: 0;
+      }
+      
+      .sidebar {
+        width: 100vw;
+      }
     }
   </style>
 </head>
-<body class="text-white min-h-screen p-6 lg:p-10">
+<body class="text-white min-height-screen">
   
-  <!-- Floating Background Elements -->
+  <!-- Enhanced Floating Background Elements -->
   <div class="floating-elements">
-    <div class="floating-circle" style="width: 100px; height: 100px; top: 10%; left: 10%; animation-delay: 0s;"></div>
-    <div class="floating-circle" style="width: 150px; height: 150px; top: 20%; right: 15%; animation-delay: 2s;"></div>
-    <div class="floating-circle" style="width: 80px; height: 80px; bottom: 20%; left: 20%; animation-delay: 4s;"></div>
-    <div class="floating-circle" style="width: 120px; height: 120px; bottom: 10%; right: 10%; animation-delay: 1s;"></div>
+    <!-- Circles -->
+    <div class="floating-circle" style="width: 120px; height: 120px; top: 8%; left: 12%; animation-delay: 0s;"></div>
+    <div class="floating-circle" style="width: 180px; height: 180px; top: 15%; right: 10%; animation-delay: 3s;"></div>
+    <div class="floating-circle" style="width: 90px; height: 90px; bottom: 25%; left: 15%; animation-delay: 6s;"></div>
+    <div class="floating-circle" style="width: 140px; height: 140px; bottom: 12%; right: 8%; animation-delay: 1.5s;"></div>
+    <div class="floating-circle" style="width: 60px; height: 60px; top: 40%; left: 50%; animation-delay: 4s;"></div>
+    
+    <!-- Triangles -->
+    <div class="floating-triangle" style="top: 20%; left: 30%; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 45px solid rgba(255,255,255,0.06); animation-delay: 2s;"></div>
+    <div class="floating-triangle" style="bottom: 30%; right: 25%; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid rgba(255,255,255,0.04); animation-delay: 7s;"></div>
+    
+    <!-- Squares -->
+    <div class="floating-square" style="width: 40px; height: 40px; top: 60%; left: 20%; animation-delay: 5s;"></div>
+    <div class="floating-square" style="width: 55px; height: 55px; top: 35%; right: 30%; animation-delay: 1s;"></div>
+    <div class="floating-square" style="width: 30px; height: 30px; bottom: 40%; left: 60%; animation-delay: 8s;"></div>
   </div>
 
-  <div class="max-w-7xl mx-auto">
-    <!-- Header Section -->
-    <div class="text-center mb-12">
-      <div class="inline-block p-4 glass-card rounded-full mb-6">
-        <i class="fas fa-microphone-alt text-6xl text-blue-200"></i>
-      </div>
-      <h1 class="text-6xl lg:text-7xl font-black mb-4 title-gradient">
-        VocalHub
-      </h1>
-      <p class="text-2xl lg:text-3xl font-light mb-6 opacity-90">AI-Powered Voice Dashboard</p>
-      <div id="status" class="inline-block px-6 py-3 glass-card rounded-full font-semibold text-lg status-indicator hidden listening-glow">
-        <i class="fas fa-headphones mr-2"></i>
-        🎧 Listening...
-      </div>
-    </div>
-
-    <!-- Stats Cards -->
-    <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
-      <div class="stat-card p-8 rounded-2xl text-center slide-in">
-        <div class="text-blue-300 mb-3">
-          <i class="fas fa-sticky-note text-3xl"></i>
-        </div>
-        <h2 class="text-xl font-semibold mb-3 opacity-90">Active Notes</h2>
-        <p class="text-5xl lg:text-6xl font-black mb-2" id="notes-count">0</p>
-        <div class="w-full bg-white/20 rounded-full h-2">
-          <div class="bg-blue-400 h-2 rounded-full" style="width: 0%"></div>
-        </div>
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <div class="p-6">
+      <div class="flex items-center justify-between mb-8">
+        <h2 class="text-2xl font-bold title-font">Chat History</h2>
+        <button onclick="toggleSidebar()" class="text-white/60 hover:text-white transition-colors">
+          <i class="fas fa-times text-xl"></i>
+        </button>
       </div>
       
-      <div class="stat-card p-8 rounded-2xl text-center slide-in" style="animation-delay: 0.2s;">
-        <div class="text-purple-300 mb-3">
-          <i class="fas fa-tasks text-3xl"></i>
-        </div>
-        <h2 class="text-xl font-semibold mb-3 opacity-90">Pending Tasks</h2>
-        <p class="text-5xl lg:text-6xl font-black mb-2" id="tasks-count">0</p>
-        <div class="w-full bg-white/20 rounded-full h-2">
-          <div class="bg-purple-400 h-2 rounded-full" style="width: 0%"></div>
-        </div>
+      <div class="space-y-3" id="chat-history">
+        <!-- Chat history will be populated here -->
       </div>
       
-      <div class="stat-card p-8 rounded-2xl text-center slide-in" style="animation-delay: 0.4s;">
-        <div class="text-green-300 mb-3">
-          <i class="fas fa-bolt text-3xl"></i>
-        </div>
-        <h2 class="text-xl font-semibold mb-3 opacity-90">Commands Today</h2>
-        <p class="text-5xl lg:text-6xl font-black mb-2" id="commands-count">0</p>
-        <div class="w-full bg-white/20 rounded-full h-2">
-          <div class="bg-green-400 h-2 rounded-full" style="width: 0%"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dynamic Cards Container -->
-    <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mb-12"></div>
-
-    <!-- Control Button -->
-    <div class="text-center">
-      <button onclick="startVoiceRecognition()" class="btn-primary px-8 py-4 rounded-full text-xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden">
-        <span class="relative z-10">
-          <i class="fas fa-microphone mr-3"></i>Start Listening
-        </span>
-      </button>
-      
-      <!-- Quick Commands Guide -->
-      <div class="mt-8 glass-card p-6 rounded-2xl inline-block">
-        <h3 class="text-lg font-semibold mb-4 text-center">
-          <i class="fas fa-lightbulb mr-2 text-yellow-300"></i>Try These Commands
+      <div class="mt-8 p-4 glass-card rounded-lg">
+        <h3 class="font-semibold mb-3 body-font flex items-center">
+          <i class="fas fa-chart-line mr-2 text-blue-300"></i>
+          Today's Stats
         </h3>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-cloud-sun text-yellow-300 w-4"></i>
-            <span>"Show weather"</span>
+        <div class="space-y-2 text-sm">
+          <div class="flex justify-between">
+            <span>Commands</span>
+            <span id="sidebar-commands">0</span>
           </div>
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-calculator text-green-300 w-4"></i>
-            <span>"Show calculator"</span>
+          <div class="flex justify-between">
+            <span>Cards Created</span>
+            <span id="sidebar-cards">0</span>
           </div>
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-map-marker-alt text-red-300 w-4"></i>
-            <span>"Show GPS"</span>
+          <div class="flex justify-between">
+            <span>Session Time</span>
+            <span id="session-time">0m</span>
           </div>
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-clock text-blue-300 w-4"></i>
-            <span>"Show clock"</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content" class="main-content p-6 lg:p-10">
+    <div class="max-w-7xl mx-auto">
+      
+      <!-- Header Section with Hamburger -->
+      <div class="flex items-center mb-8">
+        <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <div class="ml-6 text-sm text-white/70 body-font">
+          <i class="fas fa-history mr-2"></i>View Chat History
+        </div>
+      </div>
+      
+      <!-- Title Section -->
+      <div class="text-center mb-12">
+        <div class="inline-block p-6 glass-card rounded-full mb-6 morphing-bg">
+          <i class="fas fa-microphone-alt text-6xl text-white"></i>
+        </div>
+        <h1 class="text-6xl lg:text-7xl font-black mb-4 title-gradient title-font">
+          VocalHub
+        </h1>
+        <p class="text-2xl lg:text-3xl font-light mb-6 opacity-90 body-font">AI-Powered Voice Dashboard</p>
+        <div id="status" class="inline-block px-8 py-4 glass-card rounded-full font-semibold text-lg status-indicator hidden listening-glow">
+          <i class="fas fa-headphones mr-3"></i>
+          <span class="body-font">🎧 Listening...</span>
+        </div>
+      </div>
+
+      <!-- Stats Cards -->
+      <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
+        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect">
+          <div class="text-blue-300 mb-4">
+            <i class="fas fa-sticky-note text-4xl"></i>
           </div>
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-youtube text-red-500 w-4"></i>
-            <span>"Show YouTube"</span>
+          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Active Notes</h2>
+          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="notes-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-3">
+            <div class="bg-gradient-to-r from-blue-400 to-blue-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
           </div>
-          <div class="flex items-center space-x-2">
-            <i class="fas fa-music text-pink-300 w-4"></i>
-            <span>"Play music"</span>
+        </div>
+        
+        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect" style="animation-delay: 0.2s;">
+          <div class="text-purple-300 mb-4">
+            <i class="fas fa-tasks text-4xl"></i>
+          </div>
+          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Pending Tasks</h2>
+          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="tasks-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-3">
+            <div class="bg-gradient-to-r from-purple-400 to-purple-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+          </div>
+        </div>
+        
+        <div class="stat-card p-8 rounded-2xl text-center slide-in card-hover-effect" style="animation-delay: 0.4s;">
+          <div class="text-green-300 mb-4">
+            <i class="fas fa-bolt text-4xl"></i>
+          </div>
+          <h2 class="text-xl font-semibold mb-4 opacity-90 title-font">Commands Today</h2>
+          <p class="text-5xl lg:text-6xl font-black mb-3 body-font" id="commands-count">0</p>
+          <div class="w-full bg-white/20 rounded-full h-3">
+            <div class="bg-gradient-to-r from-green-400 to-green-600 h-3 rounded-full transition-all duration-1000" style="width: 0%"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dynamic Cards Container -->
+      <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mb-12"></div>
+
+      <!-- Control Button -->
+      <div class="text-center">
+        <button onclick="startVoiceRecognition()" class="btn-primary px-10 py-5 rounded-full text-xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden body-font">
+          <span class="relative z-10">
+            <i class="fas fa-microphone mr-3"></i>Start Listening
+          </span>
+        </button>
+        
+        <!-- Quick Commands Guide -->
+        <div class="mt-10 glass-card p-8 rounded-2xl inline-block max-w-4xl">
+          <h3 class="text-xl font-semibold mb-6 text-center title-font tracking-wide">
+            <i class="fas fa-lightbulb mr-2 text-yellow-300"></i>Voice Commands
+          </h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 text-sm accent-font">
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fas fa-cloud-sun text-yellow-300 w-5"></i>
+              <span>"Show weather"</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fas fa-calculator text-green-300 w-5"></i>
+              <span>"Show calculator"</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fas fa-map-marker-alt text-red-300 w-5"></i>
+              <span>"Show GPS"</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fas fa-clock text-blue-300 w-5"></i>
+              <span>"Show clock"</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fab fa-youtube text-red-500 w-5"></i>
+              <span>"Show YouTube"</span>
+            </div>
+            <div class="flex items-center space-x-3 p-3 hover:bg-white/10 rounded-lg transition-all">
+              <i class="fas fa-music text-pink-300 w-5"></i>
+              <span>"Play music"</span>
+            </div>
           </div>
         </div>
       </div>
@@ -298,20 +561,73 @@
 let commandCount = 0;
 let notesCount = 0;
 let tasksCount = 0;
+let chatHistory = [];
+let sessionStartTime = Date.now();
 
 function updateStats() {
   document.getElementById('commands-count').textContent = commandCount;
   document.getElementById('notes-count').textContent = notesCount;
   document.getElementById('tasks-count').textContent = tasksCount;
+  document.getElementById('sidebar-commands').textContent = commandCount;
+  document.getElementById('sidebar-cards').textContent = document.querySelectorAll('#card-container .glass-card').length;
   
-  // Update progress bars
+  // Update progress bars with smooth animation
   const commandProgress = Math.min((commandCount / 10) * 100, 100);
   const notesProgress = Math.min((notesCount / 5) * 100, 100);
   const tasksProgress = Math.min((tasksCount / 5) * 100, 100);
   
-  document.querySelector('#header-cards .stat-card:nth-child(1) .bg-blue-400').style.width = notesProgress + '%';
-  document.querySelector('#header-cards .stat-card:nth-child(2) .bg-purple-400').style.width = tasksProgress + '%';
-  document.querySelector('#header-cards .stat-card:nth-child(3) .bg-green-400').style.width = commandProgress + '%';
+  document.querySelector('#header-cards .stat-card:nth-child(1) .bg-gradient-to-r').style.width = notesProgress + '%';
+  document.querySelector('#header-cards .stat-card:nth-child(2) .bg-gradient-to-r').style.width = tasksProgress + '%';
+  document.querySelector('#header-cards .stat-card:nth-child(3) .bg-gradient-to-r').style.width = commandProgress + '%';
+  
+  updateSessionTime();
+}
+
+function updateSessionTime() {
+  const elapsed = Math.floor((Date.now() - sessionStartTime) / 60000);
+  document.getElementById('session-time').textContent = elapsed + 'm';
+}
+
+function addToChatHistory(command, action) {
+  const timestamp = new Date().toLocaleTimeString();
+  chatHistory.unshift({
+    command: command,
+    action: action,
+    time: timestamp
+  });
+  
+  if (chatHistory.length > 20) {
+    chatHistory.pop();
+  }
+  
+  updateChatHistoryDisplay();
+}
+
+function updateChatHistoryDisplay() {
+  const historyContainer = document.getElementById('chat-history');
+  historyContainer.innerHTML = '';
+  
+  chatHistory.forEach((item, index) => {
+    const chatItem = document.createElement('div');
+    chatItem.className = 'chat-item p-4 rounded-lg bg-white/5 hover:bg-white/10 transition-all cursor-pointer';
+    chatItem.style.animationDelay = (index * 0.1) + 's';
+    chatItem.innerHTML = `
+      <div class="text-sm font-medium body-font mb-1">${item.action}</div>
+      <div class="text-xs text-white/60 mb-2">"${item.command}"</div>
+      <div class="text-xs text-white/40">${item.time}</div>
+    `;
+    historyContainer.appendChild(chatItem);
+  });
+}
+
+function toggleSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const mainContent = document.getElementById('main-content');
+  const hamburger = document.getElementById('hamburger');
+  
+  sidebar.classList.toggle('open');
+  mainContent.classList.toggle('shifted');
+  hamburger.classList.toggle('open');
 }
 
 function createCard(id, title, icon, html) {
@@ -319,18 +635,18 @@ function createCard(id, title, icon, html) {
   
   const card = document.createElement("div");
   card.id = id;
-  card.className = "glass-card p-8 rounded-2xl slide-in";
+  card.className = "glass-card p-8 rounded-2xl slide-in card-hover-effect";
   card.innerHTML = `
     <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold flex items-center">
+      <h2 class="text-2xl font-bold flex items-center title-font">
         <i class="fas ${icon} mr-3 text-2xl"></i>
         ${title}
       </h2>
-      <button onclick="removeCard('${id}')" class="text-white/60 hover:text-red-400 transition-colors">
-        <i class="fas fa-times"></i>
+      <button onclick="removeCard('${id}')" class="text-white/60 hover:text-red-400 transition-colors duration-300 hover:scale-110">
+        <i class="fas fa-times text-lg"></i>
       </button>
     </div>
-    <div class="text-white">${html}</div>
+    <div class="text-white body-font">${html}</div>
   `;
   
   document.getElementById("card-container").appendChild(card);
@@ -347,286 +663,84 @@ function createCard(id, title, icon, html) {
 function removeCard(id) {
   const card = document.getElementById(id);
   if (card) {
-    card.style.transform = 'scale(0.9)';
+    card.style.transform = 'scale(0.8) rotateY(90deg)';
     card.style.opacity = '0';
-    setTimeout(() => card.remove(), 300);
+    setTimeout(() => card.remove(), 400);
   }
+}
+
+function showNotification(message, type = 'info', icon = 'fa-info-circle') {
+  const colors = {
+    success: 'bg-green-500',
+    error: 'bg-red-500',
+    warning: 'bg-yellow-500',
+    info: 'bg-blue-500'
+  };
+  
+  const notification = document.createElement('div');
+  notification.className = `fixed top-4 right-4 ${colors[type]} text-white px-6 py-4 rounded-lg shadow-lg z-50 notification-enter`;
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <i class="fas ${icon} mr-3"></i>
+      <div class="body-font">
+        <div class="font-bold">${message.title}</div>
+        <div class="text-sm">${message.subtitle}</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.transform = 'translateX(400px)';
+    setTimeout(() => notification.remove(), 300);
+  }, 4000);
 }
 
 function showWeather() {
   const weatherData = [
-    { temp: 22, condition: "Sunny", humidity: 45, location: "New York" },
-    { temp: 18, condition: "Cloudy", humidity: 65, location: "London" },
-    { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle" },
-    { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles" }
+    { temp: 22, condition: "Sunny", humidity: 45, location: "New York", wind: "12 km/h" },
+    { temp: 18, condition: "Cloudy", humidity: 65, location: "London", wind: "8 km/h" },
+    { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle", wind: "15 km/h" },
+    { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles", wind: "5 km/h" }
   ];
   
   const weather = weatherData[Math.floor(Math.random() * weatherData.length)];
   
   createCard("weather-card", "Weather Forecast", "fa-cloud-sun text-yellow-300", `
-    <div class="grid grid-cols-2 gap-4 mb-4">
-      <div class="text-center p-4 bg-white/10 rounded-lg">
-        <div class="text-3xl font-bold mb-1">${weather.temp}°C</div>
+    <div class="grid grid-cols-2 gap-4 mb-6">
+      <div class="text-center p-4 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm">
+        <div class="text-4xl font-black mb-2 body-font">${weather.temp}°C</div>
         <div class="text-sm opacity-75">Temperature</div>
       </div>
-      <div class="text-center p-4 bg-white/10 rounded-lg">
-        <div class="text-lg font-semibold mb-1">${weather.condition}</div>
+      <div class="text-center p-4 bg-gradient-to-br from-white/10 to-white/5 rounded-xl backdrop-blur-sm">
+        <div class="text-lg font-semibold mb-2">${weather.condition}</div>
         <div class="text-sm opacity-75">Condition</div>
       </div>
     </div>
-    <div class="flex justify-between items-center text-sm">
-      <span><i class="fas fa-tint mr-2"></i>Humidity: ${weather.humidity}%</span>
-      <span><i class="fas fa-map-marker-alt mr-2"></i>${weather.location}</span>
+    <div class="space-y-3 text-sm">
+      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+        <span class="flex items-center"><i class="fas fa-tint mr-2 text-blue-300"></i>Humidity</span>
+        <span>${weather.humidity}%</span>
+      </div>
+      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+        <span class="flex items-center"><i class="fas fa-wind mr-2 text-gray-300"></i>Wind Speed</span>
+        <span>${weather.wind}</span>
+      </div>
+      <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+        <span class="flex items-center"><i class="fas fa-map-marker-alt mr-2 text-red-300"></i>Location</span>
+        <span>${weather.location}</span>
+      </div>
     </div>
   `);
+  
+  addToChatHistory("show weather", "Weather Forecast");
 }
 
 function showCalculator() {
   createCard("calculator-card", "Calculator", "fa-calculator text-green-300", `
-    <div class="bg-black/30 p-4 rounded-lg mb-4">
-      <input id="calc-display" type="text" disabled class="w-full p-3 bg-transparent text-2xl text-right text-white border-none outline-none" value="0"/>
+    <div class="bg-black/40 p-4 rounded-xl mb-4 border border-white/10">
+      <input id="calc-display" type="text" disabled class="w-full p-4 bg-transparent text-3xl text-right text-white border-none outline-none title-font" value="0"/>
     </div>
-    <div class="grid grid-cols-4 gap-2">
-      ${["7","8","9","/","4","5","6","*","1","2","3","-","0",".","=","+"].map(v =>
-        `<button onclick="calcInput('${v}')" class="calc-btn rounded-lg p-3 text-lg font-semibold hover:scale-105 transition-all">${v}</button>`).join("")}
-      <button onclick="calcClear()" class="col-span-4 bg-red-500/80 hover:bg-red-500 rounded-lg mt-2 p-3 font-semibold transition-all">
-        <i class="fas fa-trash mr-2"></i>Clear
-      </button>
-    </div>`);
-}
-
-let calcVal = "";
-function calcInput(val) {
-  if (val === "=") {
-    try { 
-      calcVal = eval(calcVal).toString(); 
-    } catch { 
-      calcVal = "Error"; 
-    }
-  } else { 
-    if (calcVal === "0" && val !== ".") calcVal = "";
-    calcVal += val; 
-  }
-  document.getElementById("calc-display").value = calcVal || "0";
-}
-
-function calcClear() {
-  calcVal = "";
-  document.getElementById("calc-display").value = "0";
-}
-
-function showGPS() {
-  createCard("gps-card", "GPS Location", "fa-map-marker-alt text-red-300", `
-    <div class="text-center">
-      <div class="inline-block p-4 bg-white/10 rounded-full mb-4">
-        <i class="fas fa-location-arrow text-3xl text-red-300 animate-spin"></i>
-      </div>
-      <p id='gps-info' class="text-lg">
-        <i class="fas fa-spinner fa-spin mr-2"></i>Fetching location...
-      </p>
-    </div>
-  `);
-  
-  navigator.geolocation.getCurrentPosition(
-    pos => {
-      document.getElementById("gps-info").innerHTML = `
-        <div class="space-y-2">
-          <div><strong>Latitude:</strong> ${pos.coords.latitude.toFixed(4)}</div>
-          <div><strong>Longitude:</strong> ${pos.coords.longitude.toFixed(4)}</div>
-          <div><strong>Accuracy:</strong> ${Math.round(pos.coords.accuracy)}m</div>
-        </div>
-      `;
-    }, 
-    () => {
-      document.getElementById("gps-info").innerHTML = `
-        <div class="text-red-300">
-          <i class="fas fa-exclamation-triangle mr-2"></i>
-          Location not available
-        </div>
-      `;
-    }
-  );
-}
-
-function showClock() {
-  createCard("clock-card", "Live Clock", "fa-clock text-blue-300", `
-    <div class="text-center">
-      <p id='clock-time' class='text-5xl font-mono font-bold mb-4 bg-black/20 p-4 rounded-lg'>--:--:--</p>
-      <p id='clock-date' class='text-lg opacity-75'>Loading...</p>
-    </div>
-  `);
-  
-  function updateClock() {
-    const now = new Date();
-    const timeEl = document.getElementById("clock-time");
-    const dateEl = document.getElementById("clock-date");
-    
-    if (timeEl) {
-      timeEl.textContent = now.toLocaleTimeString();
-      dateEl.textContent = now.toLocaleDateString('en-US', { 
-        weekday: 'long', 
-        year: 'numeric', 
-        month: 'long', 
-        day: 'numeric' 
-      });
-    }
-  }
-  
-  updateClock();
-  setInterval(updateClock, 1000);
-}
-
-function showTime() {
-  const now = new Date();
-  const notification = document.createElement('div');
-  notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
-  notification.innerHTML = `
-    <div class="flex items-center">
-      <i class="fas fa-clock mr-3"></i>
-      <div>
-        <div class="font-bold">Current Time</div>
-        <div>${now.toLocaleTimeString()}</div>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  setTimeout(() => {
-    notification.style.transform = 'translateX(400px)';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
-}
-
-function showYouTube() {
-  createCard("youtube-card", "YouTube", "fa-youtube text-red-500", `
-    <div class="text-center">
-      <div class="mb-6">
-        <i class="fab fa-youtube text-6xl text-red-500 mb-4 block"></i>
-        <p class="text-lg opacity-75 mb-4">Ready to watch videos?</p>
-      </div>
-      <button onclick="window.open('https://youtube.com','_blank')" 
-              class='px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg font-semibold transition-all transform hover:scale-105'>
-        <i class="fas fa-external-link-alt mr-2"></i>Open YouTube
-      </button>
-    </div>
-  `);
-}
-
-function playMusic() {
-  const songs = [
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-  ];
-  
-  const randomSong = songs[Math.floor(Math.random() * songs.length)];
-  const audio = new Audio(randomSong);
-  
-  const notification = document.createElement('div');
-  notification.className = 'fixed top-4 right-4 bg-purple-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
-  notification.innerHTML = `
-    <div class="flex items-center">
-      <i class="fas fa-music mr-3 animate-pulse"></i>
-      <div>
-        <div class="font-bold">Now Playing</div>
-        <div>Background Music</div>
-      </div>
-    </div>
-  `;
-  
-  document.body.appendChild(notification);
-  audio.play().catch(e => console.log('Audio play failed:', e));
-  
-  setTimeout(() => {
-    notification.style.transform = 'translateX(400px)';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
-}
-
-function startVoiceRecognition() {
-  const status = document.getElementById("status");
-  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  
-  if (!SpeechRecognition) {
-    alert("Speech recognition not supported in this browser!");
-    return;
-  }
-
-  const recognition = new SpeechRecognition();
-  recognition.lang = "en-US";
-  recognition.continuous = false;
-  recognition.interimResults = false;
-
-  status.classList.remove("hidden");
-
-  recognition.onresult = (e) => {
-    const cmd = e.results[0][0].transcript.toLowerCase();
-    console.log("Command received:", cmd);
-    
-    if (cmd.includes("show weather")) showWeather();
-    else if (cmd.includes("show calculator")) showCalculator();
-    else if (cmd.includes("show gps")) showGPS();
-    else if (cmd.includes("show clock")) showClock();
-    else if (cmd.includes("show youtube")) showYouTube();
-    else if (cmd.includes("show time")) showTime();
-    else if (cmd.includes("play music")) playMusic();
-    else {
-      const notification = document.createElement('div');
-      notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
-      notification.innerHTML = `
-        <div class="flex items-center">
-          <i class="fas fa-exclamation-triangle mr-3"></i>
-          <div>
-            <div class="font-bold">Command Not Recognized</div>
-            <div class="text-sm">"${cmd}"</div>
-          </div>
-        </div>
-      `;
-      document.body.appendChild(notification);
-      setTimeout(() => {
-        notification.style.transform = 'translateX(400px)';
-        setTimeout(() => notification.remove(), 300);
-      }, 4000);
-    }
-    
-    status.classList.add("hidden");
-  };
-
-  recognition.onerror = (e) => {
-    console.error("Speech recognition error:", e.error);
-    status.classList.add("hidden");
-  };
-  
-  recognition.onend = () => status.classList.add("hidden");
-  recognition.start();
-}
-
-// Initialize stats
-updateStats();
-
-// Add some interactive elements on page load
-document.addEventListener('DOMContentLoaded', function() {
-  // Add welcome message
-  setTimeout(() => {
-    const welcome = document.createElement('div');
-    welcome.className = 'fixed bottom-4 left-4 bg-blue-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
-    welcome.innerHTML = `
-      <div class="flex items-center">
-        <i class="fas fa-info-circle mr-3"></i>
-        <div>
-          <div class="font-bold">Welcome to VocalHub!</div>
-          <div class="text-sm">Click "Start Listening" to begin</div>
-        </div>
-      </div>
-    `;
-    document.body.appendChild(welcome);
-    
-    setTimeout(() => {
-      welcome.style.transform = 'translateX(-400px)';
-      setTimeout(() => welcome.remove(), 300);
-    }, 5000);
-  }, 1000);
-});
-</script>
-</body>
-</html>
+    <div class="grid grid-cols-4 gap-3">
+      ${["C","±","%","/","7","8","9","×","4","5","6","-","1","2","3","+","0",".","⌫","="].map(v =>
+        `<button
