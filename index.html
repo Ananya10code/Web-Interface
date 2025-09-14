@@ -447,6 +447,79 @@
       transform: rotate(-135deg);
     }
     
+    /* New styles for note and task cards */
+    .note-card-content, .task-card-content {
+      resize: none;
+      outline: none;
+      border: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1.125rem;
+      line-height: 1.6;
+      color: white;
+      caret-color: #10b981; /* Custom cursor color */
+    }
+    
+    .task-item {
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .task-item:hover {
+      transform: translateX(5px);
+    }
+    
+    .task-item input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border: 2px solid rgba(255, 255, 255, 0.5);
+      background: transparent;
+      border-radius: 6px;
+      margin-right: 12px;
+      position: relative;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+    
+    .task-item input[type="checkbox"]:checked {
+      background: #10b981;
+      border-color: #10b981;
+    }
+    
+    .task-item input[type="checkbox"]:checked::before {
+      content: '\f00c'; /* Font Awesome check icon */
+      font-family: 'Font Awesome 5 Free';
+      font-weight: 900;
+      color: white;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    
+    .task-item input[type="checkbox"]:checked + .task-text {
+      text-decoration: line-through;
+      opacity: 0.6;
+    }
+    
+    .task-text {
+      flex-grow: 1;
+      word-break: break-word;
+    }
+    
+    .timer-display {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+      font-weight: 900;
+      text-align: center;
+      letter-spacing: -2px;
+      color: #fff;
+    }
+    
     @media (max-width: 768px) {
       :root {
         --sidebar-width: 100vw;
@@ -460,31 +533,25 @@
 </head>
 <body class="text-white min-height-screen">
   
-  <!-- Enhanced Floating Background Elements -->
   <div class="floating-elements">
-    <!-- Circles -->
     <div class="floating-circle" style="width: 140px; height: 140px; top: 8%; left: 12%; animation-delay: 0s;"></div>
     <div class="floating-circle" style="width: 200px; height: 200px; top: 15%; right: 10%; animation-delay: 4s;"></div>
     <div class="floating-circle" style="width: 100px; height: 100px; bottom: 25%; left: 15%; animation-delay: 8s;"></div>
     <div class="floating-circle" style="width: 160px; height: 160px; bottom: 12%; right: 8%; animation-delay: 2s;"></div>
     <div class="floating-circle" style="width: 80px; height: 80px; top: 45%; left: 45%; animation-delay: 6s;"></div>
     
-    <!-- Triangles -->
     <div class="floating-triangle" style="top: 20%; left: 30%; border-left: 30px solid transparent; border-right: 30px solid transparent; border-bottom: 50px solid rgba(255,255,255,0.06); animation-delay: 3s;"></div>
     <div class="floating-triangle" style="bottom: 30%; right: 25%; border-left: 25px solid transparent; border-right: 25px solid transparent; border-bottom: 40px solid rgba(255,255,255,0.04); animation-delay: 9s;"></div>
     <div class="floating-triangle" style="top: 60%; left: 70%; border-left: 20px solid transparent; border-right: 20px solid transparent; border-bottom: 35px solid rgba(255,255,255,0.05); animation-delay: 12s;"></div>
     
-    <!-- Diamonds -->
     <div class="floating-diamond" style="top: 30%; right: 15%; animation-delay: 5s;"></div>
     <div class="floating-diamond" style="bottom: 40%; left: 25%; animation-delay: 10s;"></div>
     <div class="floating-diamond" style="top: 70%; right: 40%; animation-delay: 1s;"></div>
     
-    <!-- Hexagons -->
     <div class="floating-hexagon" style="top: 50%; left: 10%; animation-delay: 7s;"></div>
     <div class="floating-hexagon" style="bottom: 15%; right: 60%; animation-delay: 11s;"></div>
   </div>
 
-  <!-- Sidebar -->
   <div id="sidebar" class="sidebar">
     <div class="p-8">
       <div class="flex items-center justify-between mb-10">
@@ -495,8 +562,7 @@
       </div>
       
       <div class="space-y-4" id="chat-history">
-        <!-- Chat history will be populated here -->
-      </div>
+        </div>
       
       <div class="mt-10 p-6 glass-card rounded-xl">
         <h3 class="font-semibold mb-4 accent-font flex items-center text-lg">
@@ -521,11 +587,9 @@
     </div>
   </div>
 
-  <!-- Main Content -->
   <div id="main-content" class="main-content p-6 lg:p-12">
     <div class="max-w-7xl mx-auto">
       
-      <!-- Header Section with Hamburger -->
       <div class="flex items-center mb-10">
         <div class="hamburger" id="hamburger" onclick="toggleSidebar()">
           <span></span>
@@ -537,7 +601,6 @@
         </div>
       </div>
       
-      <!-- Title Section -->
       <div class="text-center mb-16">
         <div class="inline-block p-8 glass-card rounded-full mb-8">
           <i class="fas fa-microphone-alt text-7xl text-white"></i>
@@ -552,7 +615,6 @@
         </div>
       </div>
 
-      <!-- Stats Cards -->
       <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10 mb-16">
         <div class="stat-card p-10 rounded-3xl text-center slide-in card-hover-effect">
           <div class="text-blue-300 mb-5">
@@ -588,10 +650,8 @@
         </div>
       </div>
 
-      <!-- Dynamic Cards Container -->
       <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8 lg:gap-10 mb-16"></div>
 
-      <!-- Control Button -->
       <div class="text-center">
         <button onclick="startVoiceRecognition()" class="btn-primary px-12 py-6 rounded-full text-2xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden accent-font">
           <span class="relative z-10">
@@ -599,7 +659,6 @@
           </span>
         </button>
         
-        <!-- Quick Commands Guide -->
         <div class="mt-12 glass-card p-10 rounded-3xl inline-block max-w-5xl">
           <h3 class="text-2xl font-semibold mb-8 text-center title-font tracking-wide">
             <i class="fas fa-lightbulb mr-3 text-yellow-300"></i>Available Voice Commands
@@ -629,6 +688,30 @@
               <i class="fas fa-music text-pink-300 w-6 text-xl"></i>
               <span>"Play background music"</span>
             </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-sticky-note text-blue-300 w-6 text-xl"></i>
+              <span>"Create a note"</span>
+            </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-tasks text-purple-300 w-6 text-xl"></i>
+              <span>"Add a task"</span>
+            </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-hourglass-half text-orange-300 w-6 text-xl"></i>
+              <span>"Set timer for [X] minutes"</span>
+            </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-newspaper text-gray-300 w-6 text-xl"></i>
+              <span>"Show the news"</span>
+            </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-quote-left text-teal-300 w-6 text-xl"></i>
+              <span>"Show a random quote"</span>
+            </div>
+            <div class="flex items-center space-x-4 p-4 hover:bg-white/10 rounded-xl transition-all duration-300">
+              <i class="fas fa-trash-alt text-red-300 w-6 text-xl"></i>
+              <span>"Clear all cards"</span>
+            </div>
           </div>
         </div>
       </div>
@@ -636,23 +719,31 @@
   </div>
 
 <script>
+// =========================================================================
+// Global State & Utility Functions
+// =========================================================================
 let commandCount = 0;
 let notesCount = 0;
 let tasksCount = 0;
 let chatHistory = [];
 let sessionStartTime = Date.now();
+const activeTimers = {}; // To manage multiple timers
 
+/**
+ * Updates the dashboard statistics and progress bars.
+ */
 function updateStats() {
+  const activeCards = document.querySelectorAll('#card-container .glass-card').length;
   document.getElementById('commands-count').textContent = commandCount;
   document.getElementById('notes-count').textContent = notesCount;
   document.getElementById('tasks-count').textContent = tasksCount;
   document.getElementById('sidebar-commands').textContent = commandCount;
-  document.getElementById('sidebar-cards').textContent = document.querySelectorAll('#card-container .glass-card').length;
+  document.getElementById('sidebar-cards').textContent = activeCards;
   
   // Update progress bars with smooth animation
-  const commandProgress = Math.min((commandCount / 10) * 100, 100);
   const notesProgress = Math.min((notesCount / 5) * 100, 100);
   const tasksProgress = Math.min((tasksCount / 5) * 100, 100);
+  const commandProgress = Math.min((commandCount / 20) * 100, 100); // Scale for more commands
   
   document.querySelector('#header-cards .stat-card:nth-child(1) .bg-gradient-to-r').style.width = notesProgress + '%';
   document.querySelector('#header-cards .stat-card:nth-child(2) .bg-gradient-to-r').style.width = tasksProgress + '%';
@@ -661,11 +752,19 @@ function updateStats() {
   updateSessionTime();
 }
 
+/**
+ * Updates the session duration display.
+ */
 function updateSessionTime() {
   const elapsed = Math.floor((Date.now() - sessionStartTime) / 60000);
   document.getElementById('session-time').textContent = elapsed + 'm';
 }
 
+/**
+ * Adds a new entry to the chat history.
+ * @param {string} command - The voice command given by the user.
+ * @param {string} action - The action performed in response to the command.
+ */
 function addToChatHistory(command, action) {
   const timestamp = new Date().toLocaleTimeString();
   chatHistory.unshift({
@@ -682,6 +781,9 @@ function addToChatHistory(command, action) {
   updateChatHistoryDisplay();
 }
 
+/**
+ * Renders the chat history on the sidebar.
+ */
 function updateChatHistoryDisplay() {
   const historyContainer = document.getElementById('chat-history');
   historyContainer.innerHTML = '';
@@ -712,6 +814,9 @@ function updateChatHistoryDisplay() {
   });
 }
 
+/**
+ * Toggles the sidebar and main content visibility.
+ */
 function toggleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const mainContent = document.getElementById('main-content');
@@ -722,6 +827,12 @@ function toggleSidebar() {
   hamburger.classList.toggle('open');
 }
 
+/**
+ * Creates and displays a temporary notification.
+ * @param {object} message - An object containing title and subtitle.
+ * @param {string} type - 'success', 'error', 'warning', or 'info'.
+ * @param {string} icon - Font Awesome icon class.
+ */
 function showNotification(message, type = 'info', icon = 'fa-info-circle') {
   const colors = {
     success: 'bg-green-500',
@@ -750,6 +861,13 @@ function showNotification(message, type = 'info', icon = 'fa-info-circle') {
   }, 5000);
 }
 
+/**
+ * Creates a new dynamic card on the dashboard.
+ * @param {string} id - Unique ID for the card.
+ * @param {string} title - Card title.
+ * @param {string} icon - Font Awesome icon class.
+ * @param {string} html - Inner HTML content for the card.
+ */
 function createCard(id, title, icon, html) {
   if (document.getElementById(id)) return;
   
@@ -772,24 +890,52 @@ function createCard(id, title, icon, html) {
   document.getElementById("card-container").appendChild(card);
   commandCount++;
   updateStats();
-  
-  // Add entrance animation
-  setTimeout(() => {
-    card.style.transform = 'scale(1)';
-    card.style.opacity = '1';
-  }, 100);
 }
 
+/**
+ * Removes a dynamic card from the dashboard with an animation.
+ * @param {string} id - The ID of the card to remove.
+ */
 function removeCard(id) {
   const card = document.getElementById(id);
   if (card) {
     card.style.transform = 'scale(0.8) rotateY(90deg)';
     card.style.opacity = '0';
     setTimeout(() => card.remove(), 400);
+    
+    // Update counts based on the type of card being removed
+    if (id.includes('note-')) notesCount = Math.max(0, notesCount - 1);
+    if (id.includes('task-')) tasksCount = Math.max(0, tasksCount - 1);
+    if (id.includes('timer-')) {
+      clearInterval(activeTimers[id]);
+      delete activeTimers[id];
+    }
+    
     updateStats();
   }
 }
 
+/**
+ * Clears all dynamic cards from the dashboard.
+ */
+function clearAllCards() {
+  const cards = document.querySelectorAll('#card-container .glass-card');
+  cards.forEach(card => removeCard(card.id));
+  showNotification({
+    title: "All Cards Cleared",
+    subtitle: "Your dashboard is now pristine and ready for new commands."
+  }, 'success', 'fa-trash-alt');
+  addToChatHistory("clear all cards", "Cleared Dashboard");
+}
+
+
+// =========================================================================
+// Card Creation Functions (Enhanced)
+// =========================================================================
+
+/**
+ * Displays a weather forecast card.
+ */
 function showWeather() {
   const weatherData = [
     { temp: 22, condition: "Sunny", humidity: 45, location: "New York", wind: "12 km/h", uv: "6" },
@@ -797,7 +943,6 @@ function showWeather() {
     { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle", wind: "15 km/h", uv: "2" },
     { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles", wind: "5 km/h", uv: "8" }
   ];
-  
   const weather = weatherData[Math.floor(Math.random() * weatherData.length)];
   
   createCard("weather-card", "Weather Forecast", "fa-cloud-sun text-yellow-300", `
@@ -834,6 +979,10 @@ function showWeather() {
   addToChatHistory("show weather", "Weather Forecast");
 }
 
+let calcVal = "";
+/**
+ * Displays an interactive calculator card.
+ */
 function showCalculator() {
   createCard("calculator-card", "Advanced Calculator", "fa-calculator text-green-300", `
     <div class="bg-black/50 p-6 rounded-2xl mb-6 border border-white/10">
@@ -850,14 +999,16 @@ function showCalculator() {
   addToChatHistory("show calculator", "Advanced Calculator");
 }
 
-let calcVal = "";
+/**
+ * Handles calculator button input.
+ * @param {string} val - The button value.
+ */
 function calcInput(val) {
   const display = document.getElementById("calc-display");
   if (!display) return;
   
   if (val === "=") {
     try { 
-      // Replace display symbols with JavaScript operators
       let expression = calcVal.replace(/×/g, '*').replace(/÷/g, '/').replace(/−/g, '-');
       calcVal = eval(expression).toString(); 
     } catch { 
@@ -879,12 +1030,18 @@ function calcInput(val) {
   display.value = calcVal || "0";
 }
 
+/**
+ * Clears the calculator display.
+ */
 function calcClear() {
   calcVal = "";
   const display = document.getElementById("calc-display");
   if (display) display.value = "0";
 }
 
+/**
+ * Displays a GPS location card.
+ */
 function showGPS() {
   createCard("gps-card", "GPS Location Services", "fa-map-marker-alt text-red-300", `
     <div class="text-center">
@@ -942,6 +1099,9 @@ function showGPS() {
   addToChatHistory("show gps", "GPS Location Services");
 }
 
+/**
+ * Displays a live clock card.
+ */
 function showClock() {
   createCard("clock-card", "Live World Clock", "fa-clock text-blue-300", `
     <div class="text-center">
@@ -987,58 +1147,145 @@ function showClock() {
   addToChatHistory("show clock", "Live World Clock");
 }
 
-function showTime() {
-  const now = new Date();
-  showNotification({
-    title: "Current Time",
-    subtitle: now.toLocaleTimeString() + " • " + now.toLocaleDateString()
-  }, 'info', 'fa-clock');
-  
-  addToChatHistory("show time", "Time Display");
+/**
+ * Creates a new, interactive note card.
+ */
+function createNote() {
+  const noteId = `note-${Date.now()}`;
+  createCard(noteId, "New Note", "fa-sticky-note text-blue-300", `
+    <textarea class="note-card-content p-4 rounded-xl body-font bg-white/5 h-48 focus:bg-white/10 transition-colors" placeholder="Type or speak your note here..."></textarea>
+  `);
+  notesCount++;
+  updateStats();
+  addToChatHistory("create a note", "New Note Created");
 }
 
-function showYouTube() {
-  createCard("youtube-card", "YouTube Portal", "fa-youtube text-red-500", `
-    <div class="text-center">
-      <div class="mb-8">
-        <i class="fab fa-youtube text-8xl text-red-500 mb-6 block"></i>
-        <p class="text-xl opacity-80 mb-6 body-font">Ready to explore endless video content?</p>
-      </div>
-      <button onclick="window.open('https://youtube.com','_blank')" 
-              class='px-8 py-4 bg-red-500 hover:bg-red-600 rounded-2xl font-semibold transition-all transform hover:scale-105 accent-font text-lg'>
-        <i class="fas fa-external-link-alt mr-3"></i>Launch YouTube
-      </button>
+/**
+ * Creates a new task card.
+ * @param {string} [taskText='New Task'] - The text content of the task.
+ */
+function addTask(taskText = 'New Task') {
+  const taskId = `task-${Date.now()}`;
+  createCard(taskId, "New Task", "fa-tasks text-purple-300", `
+    <div class="task-item p-4 bg-white/5 rounded-xl">
+      <input type="checkbox" id="${taskId}-checkbox" onclick="toggleTaskCompletion('${taskId}')">
+      <label for="${taskId}-checkbox" class="task-text body-font text-lg">${taskText}</label>
     </div>
   `);
-  
-  addToChatHistory("show youtube", "YouTube Portal");
+  tasksCount++;
+  updateStats();
+  addToChatHistory(`add a task: ${taskText}`, "New Task Added");
 }
 
-function playMusic() {
-  const songs = [
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
-    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
-  ];
+/**
+ * Toggles the completion state of a task.
+ * @param {string} taskId - The ID of the task card.
+ */
+function toggleTaskCompletion(taskId) {
+  const checkbox = document.getElementById(`${taskId}-checkbox`);
+  const taskLabel = document.querySelector(`#${taskId} .task-text`);
   
-  const randomSong = songs[Math.floor(Math.random() * songs.length)];
-  const audio = new Audio(randomSong);
-  
-  showNotification({
-    title: "Music Player Active",
-    subtitle: "Ambient background music is now playing"
-  }, 'success', 'fa-music');
-  
-  audio.play().catch(e => {
+  if (checkbox.checked) {
     showNotification({
-      title: "Audio Playback Failed",
-      subtitle: "Unable to play music - check browser permissions"
-    }, 'error', 'fa-exclamation-triangle');
-  });
-  
-  addToChatHistory("play music", "Music Player");
+      title: "Task Completed! 🎉",
+      subtitle: `"${taskLabel.textContent}" has been marked as done.`
+    }, 'success', 'fa-check-circle');
+    tasksCount = Math.max(0, tasksCount - 1);
+  } else {
+    tasksCount++;
+  }
+  updateStats();
 }
 
+/**
+ * Sets a new timer card.
+ * @param {number} minutes - The duration in minutes.
+ */
+function setTimer(minutes) {
+  const timerId = `timer-${Date.now()}`;
+  let duration = minutes * 60;
+  
+  createCard(timerId, "Countdown Timer", "fa-hourglass-half text-orange-300", `
+    <div class="timer-display" id="${timerId}-display">00:00</div>
+    <div class="mt-4 text-center text-sm opacity-80">Timer set for ${minutes} minutes.</div>
+  `);
+  
+  const timerDisplay = document.getElementById(`${timerId}-display`);
+  if (!timerDisplay) return;
+  
+  const interval = setInterval(() => {
+    duration--;
+    if (duration < 0) {
+      clearInterval(activeTimers[timerId]);
+      timerDisplay.textContent = "Time's Up!";
+      showNotification({
+        title: "Timer Expired! ⏰",
+        subtitle: `Your ${minutes}-minute timer has finished.`
+      }, 'warning', 'fa-bell');
+      return;
+    }
+    
+    const mins = Math.floor(duration / 60).toString().padStart(2, '0');
+    const secs = (duration % 60).toString().padStart(2, '0');
+    timerDisplay.textContent = `${mins}:${secs}`;
+  }, 1000);
+  
+  activeTimers[timerId] = interval;
+  addToChatHistory(`set a timer for ${minutes} minutes`, "Countdown Timer");
+}
+
+/**
+ * Fetches and displays a random quote.
+ */
+function showQuote() {
+  const quotes = [
+    { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+    { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+    { text: "Your time is limited, don't waste it living someone else's life.", author: "Steve Jobs" },
+    { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+    { text: "The best way to predict the future is to create it.", author: "Abraham Lincoln" }
+  ];
+  const quote = quotes[Math.floor(Math.random() * quotes.length)];
+  
+  createCard("quote-card", "Inspirational Quote", "fa-quote-left text-teal-300", `
+    <blockquote class="text-xl italic mb-4 body-font">"${quote.text}"</blockquote>
+    <p class="text-lg font-semibold text-right accent-font">- ${quote.author}</p>
+  `);
+  
+  addToChatHistory("show a random quote", "Random Quote");
+}
+
+/**
+ * Displays a simple news card.
+ */
+function showNews() {
+  const newsHeadlines = [
+    "Tech Giants Unveil Breakthrough in AI Ethics",
+    "Global Markets Surge as Inflation Concerns Ease",
+    "Sustainable Energy Project Launched in Major City",
+    "Space Agency Announces New Mission to Mars",
+  ];
+  const headline = newsHeadlines[Math.floor(Math.random() * newsHeadlines.length)];
+  
+  createCard("news-card", "Latest News", "fa-newspaper text-gray-300", `
+    <div class="p-4 bg-white/5 rounded-xl mb-4">
+      <h3 class="text-lg font-semibold mb-2 body-font">${headline}</h3>
+      <p class="text-sm opacity-80 body-font">A brief summary of the top news story of the day. For more, check your favorite news source!</p>
+    </div>
+    <a href="https://news.google.com" target="_blank" class="text-sm text-blue-400 hover:underline">Read Full Story <i class="fas fa-external-link-alt ml-1"></i></a>
+  `);
+  
+  addToChatHistory("show the news", "News Headlines");
+}
+
+
+// =========================================================================
+// Main Voice Recognition Logic
+// =========================================================================
+
+/**
+ * Initializes and starts the voice recognition service.
+ */
 function startVoiceRecognition() {
   const status = document.getElementById("status");
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -1046,7 +1293,7 @@ function startVoiceRecognition() {
   if (!SpeechRecognition) {
     showNotification({
       title: "Speech Recognition Unavailable",
-      subtitle: "Your browser doesn't support voice recognition"
+      subtitle: "Your browser doesn't support voice recognition."
     }, 'error', 'fa-microphone-slash');
     return;
   }
@@ -1062,6 +1309,9 @@ function startVoiceRecognition() {
     const cmd = e.results[0][0].transcript.toLowerCase();
     console.log("Voice command received:", cmd);
     
+    // Check for specific commands
+    const timerMatch = cmd.match(/set a timer for (\d+) minutes?/);
+    
     if (cmd.includes("show weather") || cmd.includes("weather forecast")) {
       showWeather();
     } else if (cmd.includes("show calculator") || cmd.includes("calculator")) {
@@ -1072,16 +1322,27 @@ function startVoiceRecognition() {
       showClock();
     } else if (cmd.includes("show youtube") || cmd.includes("youtube")) {
       showYouTube();
-    } else if (cmd.includes("show time") || cmd.includes("current time")) {
-      showTime();
     } else if (cmd.includes("play music") || cmd.includes("background music")) {
       playMusic();
+    } else if (cmd.includes("create a note")) {
+      createNote();
+    } else if (cmd.includes("add a task")) {
+      const taskText = cmd.replace('add a task', '').trim() || 'New Task';
+      addTask(taskText);
+    } else if (timerMatch) {
+      const minutes = parseInt(timerMatch[1]);
+      setTimer(minutes);
+    } else if (cmd.includes("show the news")) {
+      showNews();
+    } else if (cmd.includes("show a random quote") || cmd.includes("random quote")) {
+      showQuote();
+    } else if (cmd.includes("clear all cards")) {
+      clearAllCards();
     } else {
       showNotification({
         title: "Command Not Recognized",
         subtitle: `"${cmd}" - Try one of the suggested commands`
       }, 'warning', 'fa-question-circle');
-      
       addToChatHistory(cmd, "Unrecognized Command");
     }
     
@@ -1101,6 +1362,11 @@ function startVoiceRecognition() {
   recognition.start();
 }
 
+
+// =========================================================================
+// Initialization & Startup
+// =========================================================================
+
 // Initialize application
 updateStats();
 updateChatHistoryDisplay();
@@ -1117,3 +1383,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }, 'info', 'fa-magic');
   }, 1500);
 });
+</script>
+</body>
+</html>
