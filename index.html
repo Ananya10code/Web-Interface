@@ -6,122 +6,551 @@
   <title>VocalHub - Enhanced Voice Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+    
+    body {
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+      background-size: 400% 400%;
+      animation: gradientShift 15s ease infinite;
+      min-height: 100vh;
+    }
+    
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    
+    .glass-card {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .glass-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .stat-card {
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+      backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: shimmer 3s infinite;
+    }
+    
+    @keyframes shimmer {
+      0% { left: -100%; }
+      100% { left: 100%; }
+    }
+    
+    .floating-elements {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -1;
+    }
+    
+    .floating-circle {
+      position: absolute;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-20px) rotate(180deg); }
+    }
+    
+    .pulse-border {
+      animation: pulseBorder 2s ease-in-out infinite;
+    }
+    
+    @keyframes pulseBorder {
+      0%, 100% { border-color: rgba(34, 197, 94, 0.5); }
+      50% { border-color: rgba(34, 197, 94, 1); }
+    }
+    
+    .listening-glow {
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.5);
+      animation: listeningGlow 1.5s ease-in-out infinite alternate;
+    }
+    
+    @keyframes listeningGlow {
+      from { box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+      to { box-shadow: 0 0 30px rgba(34, 197, 94, 0.7); }
+    }
+    
+    .btn-primary {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-primary::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      transition: left 0.5s;
+    }
+    
+    .btn-primary:hover::before {
+      left: 100%;
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 20px rgba(16, 185, 129, 0.4);
+    }
+    
+    .calc-btn {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      transition: all 0.2s ease;
+    }
+    
+    .calc-btn:hover {
+      background: rgba(255, 255, 255, 0.3);
+      transform: scale(1.05);
+    }
+    
+    .title-gradient {
+      background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 50%, #dbeafe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    
+    .slide-in {
+      animation: slideIn 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+    
+    @keyframes slideIn {
+      0% {
+        opacity: 0;
+        transform: translateY(50px) scale(0.9);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+    
+    .status-indicator {
+      position: relative;
+    }
+    
+    .status-indicator::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      right: -30px;
+      transform: translateY(-50%);
+      width: 20px;
+      height: 20px;
+      background: #10b981;
+      border-radius: 50%;
+      animation: statusPulse 2s infinite;
+    }
+    
+    @keyframes statusPulse {
+      0%, 100% { transform: translateY(-50%) scale(1); opacity: 1; }
+      50% { transform: translateY(-50%) scale(1.2); opacity: 0.7; }
+    }
+  </style>
 </head>
-<body class="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white min-h-screen p-10 font-sans">
-
-  <div class="text-center mb-10">
-    <h1 class="text-5xl font-bold mb-2">🎙️ VocalHub</h1>
-    <p class="text-xl">AI-Powered Voice Dashboard</p>
-    <div id="status" class="mt-2 text-green-200 font-semibold hidden">🎧 Listening...</div>
+<body class="text-white min-h-screen p-6 lg:p-10">
+  
+  <!-- Floating Background Elements -->
+  <div class="floating-elements">
+    <div class="floating-circle" style="width: 100px; height: 100px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+    <div class="floating-circle" style="width: 150px; height: 150px; top: 20%; right: 15%; animation-delay: 2s;"></div>
+    <div class="floating-circle" style="width: 80px; height: 80px; bottom: 20%; left: 20%; animation-delay: 4s;"></div>
+    <div class="floating-circle" style="width: 120px; height: 120px; bottom: 10%; right: 10%; animation-delay: 1s;"></div>
   </div>
 
-  <div id="header-cards" class="flex justify-center gap-6 mb-10">
-    <div class="p-6 bg-white/10 backdrop-blur rounded-xl w-[250px] text-center">
-      <h2 class="text-2xl font-semibold mb-2">Active Notes</h2>
-      <p class="text-5xl font-bold">0</p>
+  <div class="max-w-7xl mx-auto">
+    <!-- Header Section -->
+    <div class="text-center mb-12">
+      <div class="inline-block p-4 glass-card rounded-full mb-6">
+        <i class="fas fa-microphone-alt text-6xl text-blue-200"></i>
+      </div>
+      <h1 class="text-6xl lg:text-7xl font-black mb-4 title-gradient">
+        VocalHub
+      </h1>
+      <p class="text-2xl lg:text-3xl font-light mb-6 opacity-90">AI-Powered Voice Dashboard</p>
+      <div id="status" class="inline-block px-6 py-3 glass-card rounded-full font-semibold text-lg status-indicator hidden listening-glow">
+        <i class="fas fa-headphones mr-2"></i>
+        🎧 Listening...
+      </div>
     </div>
-    <div class="p-6 bg-white/10 backdrop-blur rounded-xl w-[250px] text-center">
-      <h2 class="text-2xl font-semibold mb-2">Pending Tasks</h2>
-      <p class="text-5xl font-bold">0</p>
-    </div>
-    <div class="p-6 bg-white/10 backdrop-blur rounded-xl w-[250px] text-center">
-      <h2 class="text-2xl font-semibold mb-2">Commands Today</h2>
-      <p class="text-5xl font-bold">0</p>
-    </div>
-  </div>
 
-  <div id="card-container" class="flex flex-wrap gap-6 mb-10"></div>
+    <!-- Stats Cards -->
+    <div id="header-cards" class="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 mb-12">
+      <div class="stat-card p-8 rounded-2xl text-center slide-in">
+        <div class="text-blue-300 mb-3">
+          <i class="fas fa-sticky-note text-3xl"></i>
+        </div>
+        <h2 class="text-xl font-semibold mb-3 opacity-90">Active Notes</h2>
+        <p class="text-5xl lg:text-6xl font-black mb-2" id="notes-count">0</p>
+        <div class="w-full bg-white/20 rounded-full h-2">
+          <div class="bg-blue-400 h-2 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card p-8 rounded-2xl text-center slide-in" style="animation-delay: 0.2s;">
+        <div class="text-purple-300 mb-3">
+          <i class="fas fa-tasks text-3xl"></i>
+        </div>
+        <h2 class="text-xl font-semibold mb-3 opacity-90">Pending Tasks</h2>
+        <p class="text-5xl lg:text-6xl font-black mb-2" id="tasks-count">0</p>
+        <div class="w-full bg-white/20 rounded-full h-2">
+          <div class="bg-purple-400 h-2 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+      
+      <div class="stat-card p-8 rounded-2xl text-center slide-in" style="animation-delay: 0.4s;">
+        <div class="text-green-300 mb-3">
+          <i class="fas fa-bolt text-3xl"></i>
+        </div>
+        <h2 class="text-xl font-semibold mb-3 opacity-90">Commands Today</h2>
+        <p class="text-5xl lg:text-6xl font-black mb-2" id="commands-count">0</p>
+        <div class="w-full bg-white/20 rounded-full h-2">
+          <div class="bg-green-400 h-2 rounded-full" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
 
-  <div class="text-center">
-    <button onclick="startVoiceRecognition()" class="px-6 py-3 bg-green-500 rounded-full text-xl hover:bg-green-600">
-      <i class="fas fa-microphone mr-2"></i>Start Listening
-    </button>
+    <!-- Dynamic Cards Container -->
+    <div id="card-container" class="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 lg:gap-8 mb-12"></div>
+
+    <!-- Control Button -->
+    <div class="text-center">
+      <button onclick="startVoiceRecognition()" class="btn-primary px-8 py-4 rounded-full text-xl font-semibold hover:shadow-lg transition-all duration-300 relative overflow-hidden">
+        <span class="relative z-10">
+          <i class="fas fa-microphone mr-3"></i>Start Listening
+        </span>
+      </button>
+      
+      <!-- Quick Commands Guide -->
+      <div class="mt-8 glass-card p-6 rounded-2xl inline-block">
+        <h3 class="text-lg font-semibold mb-4 text-center">
+          <i class="fas fa-lightbulb mr-2 text-yellow-300"></i>Try These Commands
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-cloud-sun text-yellow-300 w-4"></i>
+            <span>"Show weather"</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-calculator text-green-300 w-4"></i>
+            <span>"Show calculator"</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-map-marker-alt text-red-300 w-4"></i>
+            <span>"Show GPS"</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-clock text-blue-300 w-4"></i>
+            <span>"Show clock"</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-youtube text-red-500 w-4"></i>
+            <span>"Show YouTube"</span>
+          </div>
+          <div class="flex items-center space-x-2">
+            <i class="fas fa-music text-pink-300 w-4"></i>
+            <span>"Play music"</span>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
 <script>
 let commandCount = 0;
+let notesCount = 0;
+let tasksCount = 0;
+
+function updateStats() {
+  document.getElementById('commands-count').textContent = commandCount;
+  document.getElementById('notes-count').textContent = notesCount;
+  document.getElementById('tasks-count').textContent = tasksCount;
+  
+  // Update progress bars
+  const commandProgress = Math.min((commandCount / 10) * 100, 100);
+  const notesProgress = Math.min((notesCount / 5) * 100, 100);
+  const tasksProgress = Math.min((tasksCount / 5) * 100, 100);
+  
+  document.querySelector('#header-cards .stat-card:nth-child(1) .bg-blue-400').style.width = notesProgress + '%';
+  document.querySelector('#header-cards .stat-card:nth-child(2) .bg-purple-400').style.width = tasksProgress + '%';
+  document.querySelector('#header-cards .stat-card:nth-child(3) .bg-green-400').style.width = commandProgress + '%';
+}
 
 function createCard(id, title, icon, html) {
   if (document.getElementById(id)) return;
+  
   const card = document.createElement("div");
   card.id = id;
-  card.className = "p-6 bg-white/10 backdrop-blur rounded-xl w-[300px]";
+  card.className = "glass-card p-8 rounded-2xl slide-in";
   card.innerHTML = `
-    <h2 class="text-2xl font-semibold mb-4"><i class="fas ${icon} mr-2"></i>${title}</h2>
-    <div>${html}</div>
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-2xl font-bold flex items-center">
+        <i class="fas ${icon} mr-3 text-2xl"></i>
+        ${title}
+      </h2>
+      <button onclick="removeCard('${id}')" class="text-white/60 hover:text-red-400 transition-colors">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="text-white">${html}</div>
   `;
+  
   document.getElementById("card-container").appendChild(card);
-  updateCommandCount();
+  commandCount++;
+  updateStats();
+  
+  // Add entrance animation
+  setTimeout(() => {
+    card.style.transform = 'scale(1)';
+    card.style.opacity = '1';
+  }, 100);
 }
 
-function updateCommandCount() {
-  commandCount++;
-  const commandsTodayCard = document.querySelector("#header-cards div:last-child p");
-  commandsTodayCard.textContent = commandCount;
+function removeCard(id) {
+  const card = document.getElementById(id);
+  if (card) {
+    card.style.transform = 'scale(0.9)';
+    card.style.opacity = '0';
+    setTimeout(() => card.remove(), 300);
+  }
 }
 
 function showWeather() {
-  createCard("weather-card", "Weather", "fa-cloud-sun text-yellow-300", "Temp: 9°C<br>Condition: Rainy<br>Humidity: 30%<br>Location: London, UK");
+  const weatherData = [
+    { temp: 22, condition: "Sunny", humidity: 45, location: "New York" },
+    { temp: 18, condition: "Cloudy", humidity: 65, location: "London" },
+    { temp: 9, condition: "Rainy", humidity: 80, location: "Seattle" },
+    { temp: 25, condition: "Clear", humidity: 30, location: "Los Angeles" }
+  ];
+  
+  const weather = weatherData[Math.floor(Math.random() * weatherData.length)];
+  
+  createCard("weather-card", "Weather Forecast", "fa-cloud-sun text-yellow-300", `
+    <div class="grid grid-cols-2 gap-4 mb-4">
+      <div class="text-center p-4 bg-white/10 rounded-lg">
+        <div class="text-3xl font-bold mb-1">${weather.temp}°C</div>
+        <div class="text-sm opacity-75">Temperature</div>
+      </div>
+      <div class="text-center p-4 bg-white/10 rounded-lg">
+        <div class="text-lg font-semibold mb-1">${weather.condition}</div>
+        <div class="text-sm opacity-75">Condition</div>
+      </div>
+    </div>
+    <div class="flex justify-between items-center text-sm">
+      <span><i class="fas fa-tint mr-2"></i>Humidity: ${weather.humidity}%</span>
+      <span><i class="fas fa-map-marker-alt mr-2"></i>${weather.location}</span>
+    </div>
+  `);
 }
 
 function showCalculator() {
-  createCard("calculator-card", "Calculator", "fa-calculator text-yellow-300", `
-    <input id="calc-display" type="text" disabled class="w-full mb-4 p-2 bg-white/20 text-xl text-right rounded"/>
+  createCard("calculator-card", "Calculator", "fa-calculator text-green-300", `
+    <div class="bg-black/30 p-4 rounded-lg mb-4">
+      <input id="calc-display" type="text" disabled class="w-full p-3 bg-transparent text-2xl text-right text-white border-none outline-none" value="0"/>
+    </div>
     <div class="grid grid-cols-4 gap-2">
       ${["7","8","9","/","4","5","6","*","1","2","3","-","0",".","=","+"].map(v =>
-        '<button onclick="calcInput(\'' + v + '\')" class="bg-white/20 rounded p-2">' + v + '</button>').join("")}
-      <button onclick="calcClear()" class="col-span-4 bg-red-500 rounded mt-2 p-2">Clear</button>
+        `<button onclick="calcInput('${v}')" class="calc-btn rounded-lg p-3 text-lg font-semibold hover:scale-105 transition-all">${v}</button>`).join("")}
+      <button onclick="calcClear()" class="col-span-4 bg-red-500/80 hover:bg-red-500 rounded-lg mt-2 p-3 font-semibold transition-all">
+        <i class="fas fa-trash mr-2"></i>Clear
+      </button>
     </div>`);
 }
+
 let calcVal = "";
 function calcInput(val) {
   if (val === "=") {
-    try { calcVal = eval(calcVal).toString(); }
-    catch { calcVal = "Error"; }
-  } else { calcVal += val; }
-  document.getElementById("calc-display").value = calcVal;
+    try { 
+      calcVal = eval(calcVal).toString(); 
+    } catch { 
+      calcVal = "Error"; 
+    }
+  } else { 
+    if (calcVal === "0" && val !== ".") calcVal = "";
+    calcVal += val; 
+  }
+  document.getElementById("calc-display").value = calcVal || "0";
 }
+
 function calcClear() {
   calcVal = "";
-  document.getElementById("calc-display").value = "";
+  document.getElementById("calc-display").value = "0";
 }
 
 function showGPS() {
-  createCard("gps-card", "GPS Location", "fa-map-marker-alt text-red-300", "<p id='gps-info'>Fetching...</p>");
-  navigator.geolocation.getCurrentPosition(pos => {
-    document.getElementById("gps-info").textContent =
-      "Lat: " + pos.coords.latitude.toFixed(4) + ", Lng: " + pos.coords.longitude.toFixed(4);
-  }, () => document.getElementById("gps-info").textContent = "Not available");
+  createCard("gps-card", "GPS Location", "fa-map-marker-alt text-red-300", `
+    <div class="text-center">
+      <div class="inline-block p-4 bg-white/10 rounded-full mb-4">
+        <i class="fas fa-location-arrow text-3xl text-red-300 animate-spin"></i>
+      </div>
+      <p id='gps-info' class="text-lg">
+        <i class="fas fa-spinner fa-spin mr-2"></i>Fetching location...
+      </p>
+    </div>
+  `);
+  
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      document.getElementById("gps-info").innerHTML = `
+        <div class="space-y-2">
+          <div><strong>Latitude:</strong> ${pos.coords.latitude.toFixed(4)}</div>
+          <div><strong>Longitude:</strong> ${pos.coords.longitude.toFixed(4)}</div>
+          <div><strong>Accuracy:</strong> ${Math.round(pos.coords.accuracy)}m</div>
+        </div>
+      `;
+    }, 
+    () => {
+      document.getElementById("gps-info").innerHTML = `
+        <div class="text-red-300">
+          <i class="fas fa-exclamation-triangle mr-2"></i>
+          Location not available
+        </div>
+      `;
+    }
+  );
 }
 
 function showClock() {
-  createCard("clock-card", "Clock", "fa-clock text-blue-300", "<p id='clock-time' class='text-4xl text-center'>--:--:--</p>");
-  setInterval(() => {
-    const el = document.getElementById("clock-time");
-    if (el) el.textContent = new Date().toLocaleTimeString();
-  }, 1000);
+  createCard("clock-card", "Live Clock", "fa-clock text-blue-300", `
+    <div class="text-center">
+      <p id='clock-time' class='text-5xl font-mono font-bold mb-4 bg-black/20 p-4 rounded-lg'>--:--:--</p>
+      <p id='clock-date' class='text-lg opacity-75'>Loading...</p>
+    </div>
+  `);
+  
+  function updateClock() {
+    const now = new Date();
+    const timeEl = document.getElementById("clock-time");
+    const dateEl = document.getElementById("clock-date");
+    
+    if (timeEl) {
+      timeEl.textContent = now.toLocaleTimeString();
+      dateEl.textContent = now.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    }
+  }
+  
+  updateClock();
+  setInterval(updateClock, 1000);
 }
 
 function showTime() {
   const now = new Date();
-  alert("Current time: " + now.toLocaleTimeString());
+  const notification = document.createElement('div');
+  notification.className = 'fixed top-4 right-4 bg-green-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <i class="fas fa-clock mr-3"></i>
+      <div>
+        <div class="font-bold">Current Time</div>
+        <div>${now.toLocaleTimeString()}</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  setTimeout(() => {
+    notification.style.transform = 'translateX(400px)';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }
 
 function showYouTube() {
-  createCard("youtube-card", "YouTube", "fa-youtube text-red-500",
-    "<button onclick=\"window.open('https://youtube.com','_blank')\" class='px-4 py-2 bg-red-500 rounded'>Open YouTube</button>");
+  createCard("youtube-card", "YouTube", "fa-youtube text-red-500", `
+    <div class="text-center">
+      <div class="mb-6">
+        <i class="fab fa-youtube text-6xl text-red-500 mb-4 block"></i>
+        <p class="text-lg opacity-75 mb-4">Ready to watch videos?</p>
+      </div>
+      <button onclick="window.open('https://youtube.com','_blank')" 
+              class='px-6 py-3 bg-red-500 hover:bg-red-600 rounded-lg font-semibold transition-all transform hover:scale-105'>
+        <i class="fas fa-external-link-alt mr-2"></i>Open YouTube
+      </button>
+    </div>
+  `);
 }
 
 function playMusic() {
-  const audio = new Audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3");
-  audio.play();
-  alert("Playing music...");
+  const songs = [
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3",
+    "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3"
+  ];
+  
+  const randomSong = songs[Math.floor(Math.random() * songs.length)];
+  const audio = new Audio(randomSong);
+  
+  const notification = document.createElement('div');
+  notification.className = 'fixed top-4 right-4 bg-purple-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
+  notification.innerHTML = `
+    <div class="flex items-center">
+      <i class="fas fa-music mr-3 animate-pulse"></i>
+      <div>
+        <div class="font-bold">Now Playing</div>
+        <div>Background Music</div>
+      </div>
+    </div>
+  `;
+  
+  document.body.appendChild(notification);
+  audio.play().catch(e => console.log('Audio play failed:', e));
+  
+  setTimeout(() => {
+    notification.style.transform = 'translateX(400px)';
+    setTimeout(() => notification.remove(), 300);
+  }, 3000);
 }
 
 function startVoiceRecognition() {
   const status = document.getElementById("status");
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-  if (!SpeechRecognition) return alert("Speech recognition not supported!");
+  
+  if (!SpeechRecognition) {
+    alert("Speech recognition not supported in this browser!");
+    return;
+  }
 
   const recognition = new SpeechRecognition();
   recognition.lang = "en-US";
@@ -132,6 +561,8 @@ function startVoiceRecognition() {
 
   recognition.onresult = (e) => {
     const cmd = e.results[0][0].transcript.toLowerCase();
+    console.log("Command received:", cmd);
+    
     if (cmd.includes("show weather")) showWeather();
     else if (cmd.includes("show calculator")) showCalculator();
     else if (cmd.includes("show gps")) showGPS();
@@ -139,15 +570,63 @@ function startVoiceRecognition() {
     else if (cmd.includes("show youtube")) showYouTube();
     else if (cmd.includes("show time")) showTime();
     else if (cmd.includes("play music")) playMusic();
-    else alert("Unrecognized command: " + cmd);
+    else {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
+      notification.innerHTML = `
+        <div class="flex items-center">
+          <i class="fas fa-exclamation-triangle mr-3"></i>
+          <div>
+            <div class="font-bold">Command Not Recognized</div>
+            <div class="text-sm">"${cmd}"</div>
+          </div>
+        </div>
+      `;
+      document.body.appendChild(notification);
+      setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => notification.remove(), 300);
+      }, 4000);
+    }
+    
     status.classList.add("hidden");
   };
 
-  recognition.onerror = () => status.classList.add("hidden");
+  recognition.onerror = (e) => {
+    console.error("Speech recognition error:", e.error);
+    status.classList.add("hidden");
+  };
+  
   recognition.onend = () => status.classList.add("hidden");
-
   recognition.start();
 }
+
+// Initialize stats
+updateStats();
+
+// Add some interactive elements on page load
+document.addEventListener('DOMContentLoaded', function() {
+  // Add welcome message
+  setTimeout(() => {
+    const welcome = document.createElement('div');
+    welcome.className = 'fixed bottom-4 left-4 bg-blue-500 text-white px-6 py-4 rounded-lg shadow-lg z-50 slide-in';
+    welcome.innerHTML = `
+      <div class="flex items-center">
+        <i class="fas fa-info-circle mr-3"></i>
+        <div>
+          <div class="font-bold">Welcome to VocalHub!</div>
+          <div class="text-sm">Click "Start Listening" to begin</div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(welcome);
+    
+    setTimeout(() => {
+      welcome.style.transform = 'translateX(-400px)';
+      setTimeout(() => welcome.remove(), 300);
+    }, 5000);
+  }, 1000);
+});
 </script>
 </body>
 </html>
